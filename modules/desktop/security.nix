@@ -1,8 +1,8 @@
-{ ... }:
+{ pkgs, ... }:
 {
-    security.polkit.enable = true
+    security.polkit.enable = true;
 
-    environment.systemPackages = pkgs; [
+    environment.systemPackages = with pkgs; [
         hyprpolkitagent
     ];
 }

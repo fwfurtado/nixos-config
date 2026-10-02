@@ -1,6 +1,7 @@
 {
   "$declared": {
-    "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable"
+    "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable",
+    "noctalia": "github:noctalia-dev/noctalia"
   },
   "nixpkgs": {
     "type": "github",
@@ -9,5 +10,13 @@
     "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
     "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
     "lastModified": 1790822859
+  },
+  "noctalia": {
+    "type": "github",
+    "owner": "noctalia-dev",
+    "repo": "noctalia",
+    "rev": "63685992f8cfef008de338ff769c8f44df3bcdaa",
+    "narHash": "sha256-zjTq+MSL+B7GpRx/gEpj3y+OqonsdZBuA1OGrBQdlXw=",
+    "lastModified": 1790967847
   }
 }

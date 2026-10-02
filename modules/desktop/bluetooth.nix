@@ -1,5 +1,5 @@
 { ... }:
 {
     hardware.bluetooth.enable = true;
-    service.blueman.enable = true;
+    services.blueman.enable = true;
 }

@@ -1,8 +1,8 @@
 { ... }:
 {
     programs.hyprland = {
-        enabled = true;
+        enable = true;
         withUWSM = true;
-        xwayland.enabled = true;
+        xwayland.enable = true;
     };
 }

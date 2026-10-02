@@ -46,3 +46,6 @@
 
 [inputs.nixpkgs]
 url = "github:NixOS/nixpkgs/nixos-unstable"
+
+[inputs.noctalia]
+url = "github:noctalia-dev/noctalia"
