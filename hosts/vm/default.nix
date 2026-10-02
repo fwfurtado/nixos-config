@@ -10,6 +10,7 @@
     ../../modules/bluetooth.nix
     ../../modules/networking.nix
     ../../modules/users.nix
+    ../../modules/power.nix
     ../../modules/packages.nix
   ];
 

@@ -9,6 +9,5 @@
         slurp
 
         networkmanagerapplet
-        blueman
     ];
 }
