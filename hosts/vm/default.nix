@@ -7,6 +7,7 @@
     ../../modules/users.nix
     ../../modules/packages.nix
     ../../modules/networking.nix
+    ../../modules/desktop
   ];
 
   networking.hostName = "nixos-test";

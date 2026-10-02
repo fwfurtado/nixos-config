@@ -38,6 +38,8 @@ rebuild:
 	rm -f result
 	$(MAKE) build
 
+vm-desktop: build
+	$(VM_RUNNER)
 
 ## Run the VM interactively using the current terminal as serial console
 vm-console: build
@@ -153,4 +155,4 @@ help:
 	@echo "  make vm-log       Follow VM log"
 	@echo
 	@echo "  make ssh          SSH into the VM"
-	@echo "  make clean        Remove generated files"
+

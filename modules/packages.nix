@@ -4,7 +4,6 @@
       chezmoi
       git
       neovim
-      ghostty
       ripgrep
       fd
     ];
