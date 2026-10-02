@@ -1,6 +1,6 @@
 { ... }:
 {
-    import = [
+    imports = [
         ./greeter.nix
         ./noctalia.nix
     ];

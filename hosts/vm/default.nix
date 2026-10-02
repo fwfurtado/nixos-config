@@ -3,11 +3,14 @@
 
 {
   imports = [
+    ../../modules/desktop
+    ../../modules/services
+    ../../modules/audio.nix
     ../../modules/base.nix
+    ../../modules/bluetooth.nix
+    ../../modules/networking.nix
     ../../modules/users.nix
     ../../modules/packages.nix
-    ../../modules/networking.nix
-    ../../modules/desktop
   ];
 
   networking.hostName = "nixos-test";
