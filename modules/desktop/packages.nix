@@ -2,12 +2,10 @@
 
 {
     environment.systemPackages = with pkgs; [
-        ghostty
+        kitty
 
         wl-clipboard
         grim
         slurp
-
-        networkmanagerapplet
     ];
 }
