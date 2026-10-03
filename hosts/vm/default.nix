@@ -4,6 +4,7 @@
 {
   imports = [
     ../../modules/desktop
+    ../../modules/secrets
     ../../modules/services
     ../../modules/audio.nix
     ../../modules/base.nix
