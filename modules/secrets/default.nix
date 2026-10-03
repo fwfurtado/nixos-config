@@ -2,14 +2,16 @@
 
 {
     imports = [
-        inputs.sops-nix.nixosModues.sops
+        inputs.sops-nix.nixosModules.sops
+        ./machine.nix
+        ./user.nix
     ];
 
     sops = {
         defaultSopsFile = ../../../secrets/secrets.yaml;
         defaultSopsFormat = "yaml";
 
-        agent.keyFile = "/var/lib/sops-nix/key.txt";
+        age.keyFile = "/var/lib/sops-nix/key.txt";
     };
 
     sops.secrets.example = {};

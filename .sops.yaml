@@ -1,10 +1,12 @@
 keys:
-  - &fernando age1
-  - &nixos_vm age1
+  - &user age1qk0uvm94dwtsjkzdv8axnwdkqcfneg63fplf7ltr0v8a2zeakvaqz2np27
+  - &vm age1nz3dgpqse6txkt859w6stmmq6svh8keelz0jhf3qwnjam5xlvdpsktpv82
+  - &desktop age1fre3awn82994lqz7lsv69vykl2dc3k98g5c5hl454xdgph59fdwsaez59e
 
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - age:
-          - *fernando
-          - *nixos_vm
+          - *user
+          - *vm
+          - *desktop
