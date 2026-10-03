@@ -9,7 +9,7 @@
        ./bluetooth.nix
        ./keyboard.nix
        ./networking.nix
-       ./package.nix
+       ./packages.nix
        ./power.nix
        ./users.nix
     ];

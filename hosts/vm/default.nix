@@ -3,7 +3,7 @@
 
 {
   imports = [
-    ../../modules/
+    ../../modules
   ];
 
   networking.hostName = "nixos-test";
