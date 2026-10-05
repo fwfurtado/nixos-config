@@ -3,6 +3,7 @@ SHELL := /usr/bin/env bash
 VM_RUNNER     := ./result/bin/run-nixos-test-vm
 HOME_RESULT   := result-home
 HOME_DESKTOP  ?= false
+SYSTEM_RESULT := result-system
 
 VM_HOST       := 127.0.0.1
 VM_SSH_PORT   := 2222
@@ -20,6 +21,9 @@ VM_LOG        := .vm.log
 	home-switch \
 	home-build-desktop \
 	home-switch-desktop \
+	system-bootstrap \
+	system-build \
+	system-switch \
 	vm-console \
 	vm-up \
 	vm-down \
@@ -63,6 +67,23 @@ home-build-desktop:
 
 home-switch-desktop:
 	$(MAKE) home-switch HOME_DESKTOP=true
+
+## Bootstrap distro-owned PAM/greeter packages once on Ubuntu/Fedora
+system-bootstrap:
+	./scripts/bootstrap-graphical-login.sh
+
+## Build the root-level standalone Linux configuration
+system-build:
+	nix-build \
+		--option extra-experimental-features 'nix-command flakes' \
+		./standalone-system.nix \
+		-o $(SYSTEM_RESULT)
+
+## Register and activate the root-level standalone Linux configuration
+system-switch: system-build
+	@STORE_PATH="$$(readlink -f $(SYSTEM_RESULT))"; \
+		sudo "$$STORE_PATH/bin/system-manager-engine" register --store-path "$$STORE_PATH"; \
+		sudo "$$STORE_PATH/bin/system-manager-engine" activate --store-path "$$STORE_PATH"
 
 vm-desktop: build
 	$(VM_RUNNER)
@@ -163,6 +184,7 @@ clean:
 	-$(MAKE) vm-down
 	rm -f result
 	rm -f $(HOME_RESULT)
+	rm -f $(SYSTEM_RESULT)
 	rm -f $(VM_PID)
 	rm -f $(VM_LOG)
 
@@ -178,6 +200,11 @@ help:
 	@echo "  make home-switch  Build and activate standalone Home Manager"
 	@echo "  make home-build-desktop   Build standalone Home Manager with desktop"
 	@echo "  make home-switch-desktop  Activate standalone Home Manager with desktop"
+	@echo
+	@echo "Standalone Linux system (Ubuntu/Fedora)"
+	@echo "  make system-bootstrap  Install distro-owned greetd/Noctalia Greeter prerequisites"
+	@echo "  make system-build      Build declarative root-level session configuration"
+	@echo "  make system-switch     Register and activate greetd/session configuration"
 	@echo
 	@echo "  make vm-console   Start VM attached to the terminal"
 	@echo "  make vm-up        Start VM in background"

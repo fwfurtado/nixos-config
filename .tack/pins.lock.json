@@ -3,38 +3,47 @@
     "home-manager": "github:nix-community/home-manager",
     "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable",
     "noctalia": "github:noctalia-dev/noctalia",
-    "sops-nix": "github:Mic92/sops-nix"
+    "sops-nix": "github:Mic92/sops-nix",
+    "system-manager": "github:numtide/system-manager"
   },
   "home-manager": {
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "acd21c5a3420a9d5fd0ed06299b10828267ef9ba",
-    "narHash": "sha256-ZN+riaeFuE+DZ5zfqJiXlM12jLwZzeIXiNkU1YeHMXI=",
-    "lastModified": 1790989254
+    "rev": "aa23f720d022187228bc264f759aef6b80233bcf",
+    "narHash": "sha256-+lrD+sxc2RKUWXRBAcggn7uBCFeJgnV75jD/cz7gJRA=",
+    "lastModified": 1791227480
   },
   "nixpkgs": {
     "type": "github",
     "owner": "NixOS",
     "repo": "nixpkgs",
-    "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
-    "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
-    "lastModified": 1790822859
+    "rev": "494ce7fd23ff6a5dff39e1fb11e9b6f2ac74bf25",
+    "narHash": "sha256-Ni0LBydzaCi8oek12r4mVreuFHqYlM1eTD6SfiENKfw=",
+    "lastModified": 1791179034
   },
   "noctalia": {
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "63685992f8cfef008de338ff769c8f44df3bcdaa",
-    "narHash": "sha256-zjTq+MSL+B7GpRx/gEpj3y+OqonsdZBuA1OGrBQdlXw=",
-    "lastModified": 1790967847
+    "rev": "4da7a84135070f92333968be9d1486edb7cf8e2b",
+    "narHash": "sha256-w41WEK3y1U2FMf/01iyYHJg1zbskNWEC588/8pK307c=",
+    "lastModified": 1791232579
   },
   "sops-nix": {
     "type": "github",
     "owner": "Mic92",
     "repo": "sops-nix",
-    "rev": "5efb5a6f4f5ab192817d28557dd4d650fa14d866",
-    "narHash": "sha256-rs9meAYxW3zzrh43yaW7htrqCD+X9+pupDPHN86fumI=",
-    "lastModified": 1790498116
+    "rev": "dcd241ba97088c22569d1573286e1b9daad340c0",
+    "narHash": "sha256-nFxM+pKoZ8LJAEnUXARyCaOAloWgaW9kZQOSjWzKcTE=",
+    "lastModified": 1791103873
+  },
+  "system-manager": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "system-manager",
+    "rev": "0e6432da4aaaa2f9e0914acbda5e67697def7fbf",
+    "narHash": "sha256-/rmaPvTJN27TVt2HU3fjnC7x7RqHL3wYBV2exA3tVco=",
+    "lastModified": 1790893495
   }
 }

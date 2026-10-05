@@ -56,3 +56,7 @@ url = "github:Mic92/sops-nix"
 [inputs.home-manager]
 url = "github:nix-community/home-manager"
 follows = { nixpkgs = "nixpkgs" }
+
+[inputs.system-manager]
+url = "github:numtide/system-manager"
+follows = { nixpkgs = "nixpkgs" }
