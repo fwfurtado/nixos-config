@@ -2,6 +2,7 @@ SHELL := /usr/bin/env bash
 
 VM_RUNNER     := ./result/bin/run-nixos-test-vm
 HOME_RESULT   := result-home
+HOME_DESKTOP  ?= false
 
 VM_HOST       := 127.0.0.1
 VM_SSH_PORT   := 2222
@@ -17,6 +18,8 @@ VM_LOG        := .vm.log
 	rebuild \
 	home-build \
 	home-switch \
+	home-build-desktop \
+	home-switch-desktop \
 	vm-console \
 	vm-up \
 	vm-down \
@@ -46,12 +49,20 @@ home-build:
 	nix-build \
 		--option extra-experimental-features 'nix-command flakes' \
 		./home.nix \
+		--arg desktop $(HOME_DESKTOP) \
 		-A activationPackage \
 		-o $(HOME_RESULT)
 
 ## Build and activate the standalone Home Manager profile
 home-switch: home-build
 	./$(HOME_RESULT)/activate
+
+## Explicitly include the graphical desktop profile on standalone Linux
+home-build-desktop:
+	$(MAKE) home-build HOME_DESKTOP=true
+
+home-switch-desktop:
+	$(MAKE) home-switch HOME_DESKTOP=true
 
 vm-desktop: build
 	$(VM_RUNNER)
@@ -165,6 +176,8 @@ help:
 	@echo
 	@echo "  make home-build   Build standalone Home Manager"
 	@echo "  make home-switch  Build and activate standalone Home Manager"
+	@echo "  make home-build-desktop   Build standalone Home Manager with desktop"
+	@echo "  make home-switch-desktop  Activate standalone Home Manager with desktop"
 	@echo
 	@echo "  make vm-console   Start VM attached to the terminal"
 	@echo "  make vm-up        Start VM in background"

@@ -1,4 +1,4 @@
-{ system ? builtins.currentSystem }:
+{ system ? builtins.currentSystem, desktop ? false }:
 let
   inputs = import ./.tack;
   lib = inputs.nixpkgs.lib;
@@ -18,6 +18,7 @@ inputs.home-manager.lib.homeManagerConfiguration {
   extraSpecialArgs = {
     inherit inputs homePlatform;
     standalone = true;
+    homeDesktop = desktop;
   };
 
   modules = [

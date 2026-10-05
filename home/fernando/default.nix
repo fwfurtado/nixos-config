@@ -1,10 +1,13 @@
-{ lib, homePlatform, ... }:
+{ lib, homePlatform, homeDesktop ? false, ... }:
 {
   imports = [
     ./common.nix
   ]
   ++ lib.optionals (homePlatform == "linux") [
     ./linux.nix
+  ]
+  ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
+    ./linux-desktop.nix
   ]
   ++ lib.optionals (homePlatform == "darwin") [
     ./darwin.nix

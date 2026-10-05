@@ -13,6 +13,7 @@
       inherit inputs;
       standalone = false;
       homePlatform = "linux";
+      homeDesktop = true;
     };
 
     users.fernando = import ../home/fernando;
