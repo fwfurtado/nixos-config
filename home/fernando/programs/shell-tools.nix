@@ -8,6 +8,8 @@
   programs.fzf = {
     enable = true;
     enableFishIntegration = true;
+
+    historyWidget.fish.command = "";
   };
 
   programs.direnv = {

@@ -8,7 +8,7 @@
 
     # This is application code rather than serializable preferences; keep Lua as
     # Lua while Home Manager owns installation and runtime dependencies.
-    extraLuaConfig = builtins.readFile ./neovim/init.lua;
+    initLua = builtins.readFile ./neovim/init.lua;
 
     extraPackages = with pkgs; [
       ripgrep
