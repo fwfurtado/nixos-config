@@ -12,6 +12,7 @@
     extraSpecialArgs = {
       inherit inputs;
       standalone = false;
+      homePlatform = "linux";
     };
 
     users.fernando = import ../home/fernando;

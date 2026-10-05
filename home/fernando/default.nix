@@ -1,19 +1,19 @@
-{ lib, pkgs, ... }:
+{ lib, homePlatform, ... }:
 {
   imports = [
     ./common.nix
   ]
-  ++ lib.optionals pkgs.stdenv.isLinux [
+  ++ lib.optionals (homePlatform == "linux") [
     ./linux.nix
   ]
-  ++ lib.optionals pkgs.stdenv.isDarwin [
+  ++ lib.optionals (homePlatform == "darwin") [
     ./darwin.nix
   ];
 
   home = {
     username = "fernando";
     homeDirectory =
-      if pkgs.stdenv.isDarwin
+      if homePlatform == "darwin"
       then "/Users/fernando"
       else "/home/fernando";
 
