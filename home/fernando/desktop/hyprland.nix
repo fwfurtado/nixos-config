@@ -1,15 +1,17 @@
-{ ... }:
+{ pkgs, standalone ? false, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
 
-    # NixOS owns the compositor/session packages; Home Manager owns user config.
-    package = null;
-    portalPackage = null;
+    # NixOS owns the compositor/session packages. On non-NixOS systems the
+    # standalone Home Manager profile provides them.
+    package = if standalone then pkgs.hyprland else null;
+    portalPackage = if standalone then pkgs.xdg-desktop-portal-hyprland else null;
     configType = "lua";
 
-    # UWSM owns the session lifecycle, so do not start a second HM session target.
-    systemd.enable = false;
+    # NixOS uses UWSM for the session lifecycle; standalone Linux can use the
+    # Home Manager user target.
+    systemd.enable = standalone;
 
     settings = {
       config = {

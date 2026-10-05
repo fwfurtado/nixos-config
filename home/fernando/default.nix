@@ -1,16 +1,22 @@
-{ ... }:
+{ lib, pkgs, ... }:
 {
   imports = [
-    ./environment.nix
-    ./packages.nix
-    ./programs
-    ./desktop
-    ./services
+    ./common.nix
+  ]
+  ++ lib.optionals pkgs.stdenv.isLinux [
+    ./linux.nix
+  ]
+  ++ lib.optionals pkgs.stdenv.isDarwin [
+    ./darwin.nix
   ];
 
   home = {
     username = "fernando";
-    homeDirectory = "/home/fernando";
+    homeDirectory =
+      if pkgs.stdenv.isDarwin
+      then "/Users/fernando"
+      else "/home/fernando";
+
     stateVersion = "26.05";
     preferXdgDirectories = true;
   };

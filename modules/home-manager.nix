@@ -11,6 +11,7 @@
 
     extraSpecialArgs = {
       inherit inputs;
+      standalone = false;
     };
 
     users.fernando = import ../home/fernando;

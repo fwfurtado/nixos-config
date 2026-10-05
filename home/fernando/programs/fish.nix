@@ -100,9 +100,6 @@
       gclone.body = builtins.readFile ./fish-functions/gclone.fish;
       atuin-login.body = builtins.readFile ./fish-functions/atuin-login.fish;
       md.body = builtins.readFile ./fish-functions/md.fish;
-      pbcopy.body = builtins.readFile ./fish-functions/pbcopy.fish;
-      pbpaste.body = builtins.readFile ./fish-functions/pbpaste.fish;
-      pi-seccomp-off.body = builtins.readFile ./fish-functions/pi-seccomp-off.fish;
       rec-session.body = builtins.readFile ./fish-functions/rec-session.fish;
       y.body = builtins.readFile ./fish-functions/y.fish;
     };

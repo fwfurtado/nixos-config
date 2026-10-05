@@ -1,6 +1,7 @@
 SHELL := /usr/bin/env bash
 
 VM_RUNNER     := ./result/bin/run-nixos-test-vm
+HOME_RESULT   := result-home
 
 VM_HOST       := 127.0.0.1
 VM_SSH_PORT   := 2222
@@ -14,6 +15,8 @@ VM_LOG        := .vm.log
 .PHONY: \
 	build \
 	rebuild \
+	home-build \
+	home-switch \
 	vm-console \
 	vm-up \
 	vm-down \
@@ -37,6 +40,18 @@ build:
 rebuild:
 	rm -f result
 	$(MAKE) build
+
+## Build the standalone Home Manager profile for the current platform
+home-build:
+	nix-build \
+		--option extra-experimental-features 'nix-command flakes' \
+		./home.nix \
+		-A activationPackage \
+		-o $(HOME_RESULT)
+
+## Build and activate the standalone Home Manager profile
+home-switch: home-build
+	./$(HOME_RESULT)/activate
 
 vm-desktop: build
 	$(VM_RUNNER)
@@ -136,6 +151,7 @@ ssh:
 clean:
 	-$(MAKE) vm-down
 	rm -f result
+	rm -f $(HOME_RESULT)
 	rm -f $(VM_PID)
 	rm -f $(VM_LOG)
 
@@ -146,6 +162,9 @@ help:
 	@echo
 	@echo "  make build        Build the NixOS VM"
 	@echo "  make rebuild      Force a new evaluation/build"
+	@echo
+	@echo "  make home-build   Build standalone Home Manager"
+	@echo "  make home-switch  Build and activate standalone Home Manager"
 	@echo
 	@echo "  make vm-console   Start VM attached to the terminal"
 	@echo "  make vm-up        Start VM in background"

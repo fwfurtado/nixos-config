@@ -12,7 +12,6 @@
 
     extraPackages = with pkgs; [
       ripgrep
-      wl-clipboard
       gopls
       rust-analyzer
       zls
