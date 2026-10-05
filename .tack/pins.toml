@@ -52,3 +52,7 @@ url = "github:noctalia-dev/noctalia"
 
 [inputs.sops-nix]
 url = "github:Mic92/sops-nix"
+
+[inputs.home-manager]
+url = "github:nix-community/home-manager"
+follows = { nixpkgs = "nixpkgs" }

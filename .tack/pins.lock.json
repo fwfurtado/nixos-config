@@ -1,8 +1,17 @@
 {
   "$declared": {
+    "home-manager": "github:nix-community/home-manager",
     "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable",
     "noctalia": "github:noctalia-dev/noctalia",
     "sops-nix": "github:Mic92/sops-nix"
+  },
+  "home-manager": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "home-manager",
+    "rev": "acd21c5a3420a9d5fd0ed06299b10828267ef9ba",
+    "narHash": "sha256-ZN+riaeFuE+DZ5zfqJiXlM12jLwZzeIXiNkU1YeHMXI=",
+    "lastModified": 1790989254
   },
   "nixpkgs": {
     "type": "github",
