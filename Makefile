@@ -3,6 +3,9 @@ SHELL := /usr/bin/env bash
 VM_RUNNER     := ./result/bin/run-nixos-test-vm
 HOME_RESULT   := result-home
 HOME_DESKTOP  ?= false
+HOME_USER     ?= $(shell id -un)
+HOME_TAILNET_PROXY ?= false
+MINIPC_RESULT := result-minipc
 SYSTEM_RESULT := result-system
 
 VM_HOST       := 127.0.0.1
@@ -18,6 +21,7 @@ VM_LOG        := .vm.log
 	build \
 	rebuild \
 	home-build \
+	minipc-build \
 	home-switch \
 	home-build-desktop \
 	home-switch-desktop \
@@ -48,12 +52,22 @@ rebuild:
 	rm -f result
 	$(MAKE) build
 
+## Evaluate and build bare-metal NixOS without installing or touching disks
+minipc-build:
+	nix-build \
+		--option extra-experimental-features 'nix-command flakes' \
+		./minipc.nix \
+		-A config.system.build.toplevel \
+		-o $(MINIPC_RESULT)
+
 ## Build the standalone Home Manager profile for the current platform
 home-build:
 	nix-build \
 		--option extra-experimental-features 'nix-command flakes' \
 		./home.nix \
 		--arg desktop $(HOME_DESKTOP) \
+		--argstr homeUsername $(HOME_USER) \
+		--arg tailnetProxy $(HOME_TAILNET_PROXY) \
 		-A activationPackage \
 		-o $(HOME_RESULT)
 
@@ -184,6 +198,7 @@ clean:
 	-$(MAKE) vm-down
 	rm -f result
 	rm -f $(HOME_RESULT)
+	rm -f $(MINIPC_RESULT)
 	rm -f $(SYSTEM_RESULT)
 	rm -f $(VM_PID)
 	rm -f $(VM_LOG)
@@ -194,6 +209,7 @@ help:
 	@echo "NixOS VM"
 	@echo
 	@echo "  make build        Build the NixOS VM"
+	@echo "  make minipc-build  Build bare-metal NixOS without installing"
 	@echo "  make rebuild      Force a new evaluation/build"
 	@echo
 	@echo "  make home-build   Build standalone Home Manager"

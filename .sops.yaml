@@ -2,8 +2,26 @@ keys:
   - &user age1qk0uvm94dwtsjkzdv8axnwdkqcfneg63fplf7ltr0v8a2zeakvaqz2np27
   - &vm age1nz3dgpqse6txkt859w6stmmq6svh8keelz0jhf3qwnjam5xlvdpsktpv82
   - &desktop age1fre3awn82994lqz7lsv69vykl2dc3k98g5c5hl454xdgph59fdwsaez59e
+  - &minipc age1scf7mearwqdcyzn7zdx7snk37udepzc92yc87rgzsvhtdghdfq2sknjmhg
+  - &standalone age1z5tm0nfucw03y3n0n8xzgdjjnck8ue6zahcsm4uyyfwwznyjk3mq45thtl
 
 creation_rules:
+  - path_regex: secrets/sing-box-(config|hosts)\.enc$
+    key_groups:
+      - age:
+          - *user
+          - *minipc
+  - path_regex: secrets/vpn-proxy-user\.enc$
+    key_groups:
+      - age:
+          - *user
+          - *minipc
+          - *standalone
+  - path_regex: secrets/noctalia-wallhaven\.enc$
+    key_groups:
+      - age:
+          - *user
+          - *minipc
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - age:

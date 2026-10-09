@@ -1,9 +1,13 @@
-{ ... }:
+{ lib, homePlatform, ... }:
 {
   programs.fish = {
     enable = true;
     preferAbbrs = true;
     generateCompletions = true;
+    shellInit = lib.optionalString (homePlatform == "darwin") ''
+      set -gx MANPATH /opt/homebrew/share/man $MANPATH
+      set -gx INFOPATH /opt/homebrew/share/info $INFOPATH
+    '';
 
     shellAliases = {
       cat = "bat";
@@ -76,11 +80,28 @@
       };
     };
 
-    interactiveShellInit = (builtins.readFile ./fish-functions/herd.fish) + ''
+    interactiveShellInit = ''
       set fish_greeting
 
       if test "$TERM_PROGRAM" = ghostty
           set -gx TERM xterm-256color
+      end
+
+      if command -q mise
+          mise activate fish | source
+      end
+
+      if command -q batman
+          batman --export-env | source
+      end
+      if command -q batpipe
+          batpipe | source
+      end
+
+      if set -q YAZI_ID
+          function __yazi_sync_cwd --on-event fish_exit
+              ya emit cd "$PWD"
+          end
       end
     '';
 

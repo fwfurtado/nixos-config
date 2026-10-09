@@ -1,6 +1,6 @@
-{ ... }:
+{ lib, homeTailnetProxy ? false, ... }:
 {
-  imports = [
-    ./cliphist.nix
+  imports = lib.optionals homeTailnetProxy [
+    ./proxy.nix
   ];
 }

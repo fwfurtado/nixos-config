@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./hyprland.nix
+    ./niri.nix
     ./portals.nix
     ./fonts.nix
     ./security.nix

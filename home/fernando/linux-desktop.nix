@@ -7,13 +7,10 @@
 
   home.packages = with pkgs; [
     wl-clipboard
-    grim
-    slurp
-    swappy
-    cliphist
-    playerctl
-    brightnessctl
-    fuzzel
+    google-chrome
+    zed-editor
+    slack
+    obsidian
     nautilus
   ];
 

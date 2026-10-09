@@ -1,8 +1,5 @@
-{ pkgs, ... }:
+{ ... }:
 {
-    security.polkit.enable = true;
-
-    environment.systemPackages = with pkgs; [
-        hyprpolkitagent
-    ];
+  # Noctalia registers its native authentication agent in the user session.
+  security.polkit.enable = true;
 }

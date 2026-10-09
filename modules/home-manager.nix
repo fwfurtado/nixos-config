@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ config, inputs, homeUsername ? "fernando", homeTailnetProxy ? false, ... }:
 {
   imports = [
     inputs.home-manager.nixosModules.home-manager
@@ -10,12 +10,18 @@
     backupFileExtension = "pre-home-manager";
 
     extraSpecialArgs = {
-      inherit inputs;
+      inherit inputs homeUsername homeTailnetProxy;
       standalone = false;
       homePlatform = "linux";
+      homeProxyUserSecretPath =
+        if homeTailnetProxy then config.sops.secrets."vpn-proxy-user".path else null;
+      homeNoctaliaWallhavenSecretPath =
+        if config.sops.secrets ? "noctalia-wallhaven"
+        then config.sops.secrets."noctalia-wallhaven".path
+        else null;
       homeDesktop = true;
     };
 
-    users.fernando = import ../home/fernando;
+    users.${homeUsername} = import ../home/fernando;
   };
 }

@@ -1,9 +1,9 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 let
-  sessionPackage = pkgs.runCommand "home-manager-hyprland-session" { } ''
+  sessionPackage = pkgs.runCommand "home-manager-niri-session" { } ''
     mkdir -p "$out/bin" "$out/share/wayland-sessions"
 
-    cat > "$out/bin/start-home-manager-hyprland" <<'EOF'
+    cat > "$out/bin/start-home-manager-niri" <<'EOF'
     #!${pkgs.runtimeShell}
     set -eu
 
@@ -12,24 +12,27 @@ let
       exit 1
     fi
 
-    launcher="$HOME/.nix-profile/bin/start-hyprland"
+    launcher="$HOME/.nix-profile/bin/niri-session"
     if [ ! -x "$launcher" ]; then
-      echo "Hyprland launcher not found at $launcher" >&2
+      echo "Niri launcher not found at $launcher" >&2
       echo "Run 'make home-switch-desktop' for this user first." >&2
       exit 1
     fi
 
+    export PATH="$HOME/.nix-profile/bin:$PATH"
+    export XDG_DATA_DIRS="$HOME/.nix-profile/share:/run/system-manager/sw/share:''${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+
     exec "$launcher"
     EOF
-    chmod +x "$out/bin/start-home-manager-hyprland"
+    chmod +x "$out/bin/start-home-manager-niri"
 
-    cat > "$out/share/wayland-sessions/hyprland-home-manager.desktop" <<EOF
+    cat > "$out/share/wayland-sessions/niri-home-manager.desktop" <<EOF
     [Desktop Entry]
-    Name=Hyprland (Home Manager)
-    Comment=Hyprland managed by Home Manager
-    Exec=/run/system-manager/sw/bin/start-home-manager-hyprland
+    Name=Niri (Home Manager)
+    Comment=Niri managed by Home Manager
+    Exec=/run/system-manager/sw/bin/start-home-manager-niri
     Type=Application
-    DesktopNames=Hyprland
+    DesktopNames=niri
     EOF
   '';
 

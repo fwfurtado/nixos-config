@@ -1,4 +1,4 @@
-{ lib, homePlatform, homeDesktop ? false, ... }:
+{ lib, homePlatform, homeDesktop ? false, homeUsername ? "fernando", ... }:
 {
   imports = [
     ./common.nix
@@ -14,11 +14,11 @@
   ];
 
   home = {
-    username = "fernando";
+    username = homeUsername;
     homeDirectory =
       if homePlatform == "darwin"
-      then "/Users/fernando"
-      else "/home/fernando";
+      then "/Users/${homeUsername}"
+      else "/home/${homeUsername}";
 
     stateVersion = "26.05";
     preferXdgDirectories = true;

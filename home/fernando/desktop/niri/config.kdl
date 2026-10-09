@@ -1,0 +1,119 @@
+// Synced from the ChezMoi Niri config; keep the Noctalia-specific rules below.
+input {
+    keyboard {
+        xkb {
+            layout "us"
+            variant "mac"
+            model "pc105"
+            options "lv3:ralt_switch"
+        }
+        repeat-rate 40
+        repeat-delay 300
+    }
+    mouse {
+        accel-speed 0.6
+        accel-profile "adaptive"
+    }
+    touchpad {
+        tap
+        natural-scroll
+        dwt
+        click-method "clickfinger"
+    }
+}
+
+output "DP-1" {
+    mode "5120x1440@119.999"
+    scale 1
+}
+
+output "HDMI-A-1" {
+    mode "5120x1440@59.977"
+    scale 1
+}
+
+layout {
+    gaps 10
+    center-focused-column "on-overflow"
+    default-column-width { proportion 0.5; }
+}
+
+prefer-no-csd
+hotkey-overlay { skip-at-startup; }
+
+// Home Manager validates this file in the store, where Noctalia's generated
+// color include is unavailable. Keep the NixOS Noctalia window rules explicit.
+window-rule {
+    geometry-corner-radius 20
+    clip-to-geometry true
+}
+window-rule {
+    match app-id="dev.noctalia.Noctalia"
+    open-floating true
+    default-column-width { fixed 1080; }
+    default-window-height { fixed 920; }
+}
+layer-rule {
+    match namespace="^noctalia-backdrop"
+    place-within-backdrop true
+}
+debug { honor-xdg-activation-with-invalid-serial; }
+
+binds {
+    Mod+Shift+Slash { spawn "noctalia" "msg" "panel-toggle" "kenn/keybind-cheatsheet:cheatsheet"; }
+
+    Mod+Return { spawn "ghostty" "+new-window"; }
+    Mod+Shift+Return { spawn "google-chrome"; }
+    Mod+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+    Mod+V { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
+    Mod+O repeat=false { toggle-overview; }
+
+    Mod+Left { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Up { focus-window-up; }
+    Mod+Down { focus-window-down; }
+    Mod+Ctrl+Left { move-column-left; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+Up { move-window-up; }
+    Mod+Ctrl+Down { move-window-down; }
+
+    Mod+Alt+Left { spawn-sh "niri msg action move-floating-window -x -100"; }
+    Mod+Alt+Right { spawn-sh "niri msg action move-floating-window -x +100"; }
+    Mod+Alt+Up { spawn-sh "niri msg action move-floating-window -y -100"; }
+    Mod+Alt+Down { spawn-sh "niri msg action move-floating-window -y +100"; }
+    Mod+Alt+Shift+Left { spawn-sh "niri msg action move-floating-window -x -20"; }
+    Mod+Alt+Shift+Right { spawn-sh "niri msg action move-floating-window -x +20"; }
+    Mod+Alt+Shift+Up { spawn-sh "niri msg action move-floating-window -y -20"; }
+    Mod+Alt+Shift+Down { spawn-sh "niri msg action move-floating-window -y +20"; }
+
+    Mod+Page_Up { focus-workspace-up; }
+    Mod+Page_Down { focus-workspace-down; }
+    Mod+Ctrl+Page_Up { move-column-to-workspace-up; }
+    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
+
+    Mod+C { center-column; }
+    Mod+BracketLeft { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-column-width-back; }
+    Mod+Ctrl+R { switch-preset-window-height; }
+
+    Mod+Q repeat=false { close-window; }
+    Mod+M { maximize-column; }
+    Mod+Shift+M { fullscreen-window; }
+    Mod+F { toggle-window-floating; }
+    Mod+Shift+F { switch-focus-between-floating-and-tiling; }
+
+    Mod+Alt+L { spawn "noctalia" "msg" "session" "lock"; }
+
+    XF86AudioRaiseVolume { spawn "noctalia" "msg" "volume-up"; }
+    XF86AudioLowerVolume { spawn "noctalia" "msg" "volume-down"; }
+    XF86AudioMute repeat=false allow-when-locked=true { spawn "noctalia" "msg" "volume-mute"; }
+    XF86AudioMicMute repeat=false allow-when-locked=true { spawn "noctalia" "msg" "mic-mute"; }
+    XF86AudioPlay repeat=false allow-when-locked=true { spawn "noctalia" "msg" "media" "toggle"; }
+    XF86AudioNext repeat=false allow-when-locked=true { spawn "noctalia" "msg" "media" "next"; }
+    XF86AudioPrev repeat=false allow-when-locked=true { spawn "noctalia" "msg" "media" "previous"; }
+    XF86MonBrightnessUp { spawn "noctalia" "msg" "brightness-up"; }
+    XF86MonBrightnessDown { spawn "noctalia" "msg" "brightness-down"; }
+    Print { spawn "noctalia" "msg" "screenshot-region"; }
+}

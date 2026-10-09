@@ -1,7 +1,8 @@
 { ... }:
 {
   imports = [
-    ./hyprland.nix
+    ./niri.nix
     ./noctalia.nix
+    ./noctalia-plugins.nix
   ];
 }

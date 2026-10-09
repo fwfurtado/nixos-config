@@ -1,8 +1,11 @@
 { system ? builtins.currentSystem }:
 let
-  inputs = import ./.tack;
+  # Tack owns the exact revision. Native Nix resolves this upstream flake's
+  # nested userborn follows; Tack's transitive resolver recurses on that graph.
+  systemManagerRevision = (builtins.fromJSON (builtins.readFile ./.tack/pins.lock.json)).system-manager.rev;
+  systemManager = builtins.getFlake "github:numtide/system-manager/${systemManagerRevision}";
 in
-inputs.system-manager.lib.makeSystemConfig {
+systemManager.lib.makeSystemConfig {
   modules = [
     ./standalone-system
     {
@@ -10,7 +13,4 @@ inputs.system-manager.lib.makeSystemConfig {
     }
   ];
 
-  specialArgs = {
-    inherit inputs;
-  };
 }

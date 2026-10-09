@@ -59,4 +59,4 @@ follows = { nixpkgs = "nixpkgs" }
 
 [inputs.system-manager]
 url = "github:numtide/system-manager"
-follows = { nixpkgs = "nixpkgs" }
+type = "fetch"

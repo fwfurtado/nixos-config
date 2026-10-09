@@ -3,7 +3,7 @@ let
   home = config.home.homeDirectory;
 in
 {
-  target.genericLinux.enable = standalone;
+  targets.genericLinux.enable = standalone;
   home.sessionVariables.ANDROID_SDK = "${home}/Android/Sdk";
 
   home.sessionPath = [

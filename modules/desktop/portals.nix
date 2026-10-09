@@ -1,19 +1,6 @@
 { pkgs, ... }:
-
 {
-    xdg.portal = {
-        enable = true;
-
-        extraPortals = [
-            pkgs.xdg-desktop-portal-gtk
-        ];
-
-        config = {
-            common = {
-                default = [ "hyprland" "gtk" ];
-
-                "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
-            };
-        };
-    };
+  # programs.niri supplies the niri-specific GNOME screencast portal and
+  # portal routing; GTK handles access, notifications and fallback dialogs.
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 }

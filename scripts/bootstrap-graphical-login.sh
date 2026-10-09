@@ -16,7 +16,7 @@ install_ubuntu() {
   fi
 
   sudo apt-get update
-  sudo apt-get install -y ca-certificates wget dbus greetd accountsservice polkitd
+  sudo apt-get install -y ca-certificates wget dbus dbus-user-session greetd accountsservice polkitd gnome-keyring
 
   if [[ ! -f /usr/share/keyrings/nickh-archive-keyring.gpg && ! -f /etc/apt/trusted.gpg.d/nickh-archive-keyring.gpg ]]; then
     tmp="$(mktemp --suffix=.deb)"
@@ -44,7 +44,7 @@ install_fedora() {
     --repofrompath "terra,https://repos.fyralabs.com/terra\$releasever" \
     terra-release
 
-  sudo dnf install -y greetd noctalia-greeter accountsservice polkit
+  sudo dnf install -y greetd noctalia-greeter accountsservice polkit gnome-keyring
 }
 
 case "${ID:-}" in

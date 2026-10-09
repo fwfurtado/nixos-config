@@ -23,6 +23,7 @@
         compression = 9;
         pager = "hunk pager";
         editor = "nvim";
+        attributesFile = "~/.config/git/attributes";
       };
 
       diff = {
@@ -65,8 +66,32 @@
         hdiff = ''-c core.pager="hunk pager" diff'';
         hshow = ''-c core.pager="hunk pager" show'';
       };
+      merge = {
+        conflictStyle = "diff3";
+        tool = "ec";
+        mergiraf = {
+          name = "mergiraf";
+          driver = "mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L";
+        };
+      };
+
+      mergetool = {
+        keepBackup = false;
+        keepTemporaries = false;
+        prompt = false;
+        ec = {
+          cmd = ''ec "$BASE" "$LOCAL" "$REMOTE" "$MERGED"'';
+          trustExitCode = true;
+        };
+      };
+
+      rerere = {
+        enabled = true;
+        autoupdate = false;
+      };
     };
   };
+  xdg.configFile."git/attributes".text = "* merge=mergiraf\n";
 
   programs.gh = {
     enable = true;

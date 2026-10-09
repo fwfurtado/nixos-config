@@ -4,6 +4,10 @@
   programs.fd.enable = true;
   programs.ripgrep.enable = true;
   programs.eza.enable = true;
+  programs.broot = {
+    enable = true;
+    enableFishIntegration = true;
+  };
 
   programs.fzf = {
     enable = true;
