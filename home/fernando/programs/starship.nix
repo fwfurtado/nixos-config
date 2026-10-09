@@ -5,7 +5,7 @@
     enableFishIntegration = true;
     settings = {
       "$schema" = "https://starship.rs/config-schema.json";
-      format = "$username\\\n$hostname\\\n$directory\\\n$git_branch\\\n$git_status\\\n$fill\\\n$c\\\n$elixir\\\n$elm\\\n$golang\\\n$haskell\\\n$java\\\n$julia\\\n$nodejs\\\n$nim\\\n$rust\\\n$scala\\\n$conda\\\n$python\\\n$time\n  \\\n[󱅥 ](fg:iris) \\\n";
+      format = "$username$hostname$directory$git_branch$git_status$fill$c$elixir$elm$golang$haskell$java$julia$nodejs$nim$rust$scala$conda$python$time\n  [󱅥 ](fg:iris) ";
       palette = "rose-pine-moon";
       palettes = {
         rose-pine-dawn = {
@@ -62,15 +62,15 @@
         style = "bg:overlay fg:love";
         format = "[](fg:overlay)([$all_status$ahead_behind]($style))[](fg:overlay) ";
         up_to_date = "[ ✓ ](bg:overlay fg:iris)";
-        untracked = "[?\\\\($count\\\\)](bg:overlay fg:gold)";
-        stashed = "[\\\\$](bg:overlay fg:iris)";
-        modified = "[!\\\\($count\\\\)](bg:overlay fg:gold)";
-        renamed = "[»\\\\($count\\\\)](bg:overlay fg:iris)";
-        deleted = "[✘\\\\($count\\\\)](style)";
-        staged = "[++\\\\($count\\\\)](bg:overlay fg:gold)";
-        ahead = "[⇡\\\\(\${count}\\\\)](bg:overlay fg:foam)";
-        diverged = "⇕[\\\\[](bg:overlay fg:iris)[⇡\\\\(\${ahead_count}\\\\)](bg:overlay fg:foam)[⇣\\\\(\${behind_count}\\\\)](bg:overlay fg:rose)[\\\\]](bg:overlay fg:iris)";
-        behind = "[⇣\\\\(\${count}\\\\)](bg:overlay fg:rose)";
+        untracked = "[?\\($count\\)](bg:overlay fg:gold)";
+        stashed = "[\\$](bg:overlay fg:iris)";
+        modified = "[!\\($count\\)](bg:overlay fg:gold)";
+        renamed = "[»\\($count\\)](bg:overlay fg:iris)";
+        deleted = "[✘\\($count\\)](style)";
+        staged = "[++\\($count\\)](bg:overlay fg:gold)";
+        ahead = "[⇡\\(\${count}\\)](bg:overlay fg:foam)";
+        diverged = "⇕[\\[](bg:overlay fg:iris)[⇡\\(\${ahead_count}\\)](bg:overlay fg:foam)[⇣\\(\${behind_count}\\)](bg:overlay fg:rose)[\\]](bg:overlay fg:iris)";
+        behind = "[⇣\\(\${count}\\)](bg:overlay fg:rose)";
       };
       time = {
         disabled = false;

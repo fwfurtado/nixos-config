@@ -140,6 +140,8 @@ make minipc-build
 
 O perfil de VM segue independente (`make build`); sua senha conhecida e seu `sudo` sem senha não são importados pelo host real. O host real desabilita o servidor SSH de entrada. A conta `fwfurtado` precisa de senha definida com `passwd` no sistema alvo antes do primeiro login; não há credencial em claro nem hash de teste configurado para ela.
 
+O mini-PC usa `America/Sao_Paulo` para exibir o horário local. O `systemd-timesyncd` permanece ativo para sincronizar automaticamente o relógio por NTP; `timedatectl status` mostra separadamente o fuso e o estado de sincronização.
+
 ### Instalação a partir do Ubuntu, sem USB
 
 O [manual oficial](https://nixos.org/manual/nixos/stable/#sec-installing-from-other-distro) permite instalar diretamente a partir do Ubuntu. Depois de particionar e formatar **apenas o WD_BLACK confirmado**, monte os filesystems pelos rótulos. Use `/mnt/nixos`, porque `/mnt` já contém outros diretórios nesta máquina:
@@ -178,6 +180,14 @@ O firmware mostrou o WD_BLACK inicialmente apenas como `UEFI OS` (Boot0004, fall
 ### Desktop
 
 NixOS e Linux standalone usam Niri e Noctalia. O NixOS instala sessão, portal e greeter no sistema; Home Manager configura Niri e Noctalia Shell. O agente Polkit nativo do Noctalia substitui `hyprpolkitagent`. A luz noturna nativa substitui `wl-gammarrelay`, com localização aproximada por IP via `noctalia.dev` ([política do serviço](https://noctalia.dev/privacy)). Confira no primeiro login: Niri, Noctalia, autenticação Polkit, bloqueio de tela, portal de screencast, saídas de vídeo e desbloqueio do 1Password.
+
+`noctalia msg greeter-sync` copia a aparência para `/var/lib/noctalia-greeter/` mediante autorização Polkit. O serviço de usuário do Noctalia coloca `/run/wrappers/bin` antes do perfil do sistema no `PATH`, para usar o `pkexec` setuid do NixOS; o binário sem wrapper em `/run/current-system/sw/bin` falha com `pkexec must be setuid root`. A sincronização foi confirmada pelos arquivos `sync.toml` e wallpapers no estado do greeter, sem encerrar a sessão para testar a tela de login.
+
+O Dell Thunderbolt 4 Dock usa `services.hardware.bolt` no mini-PC. O dock foi pareado com `boltctl enroll --policy=auto` após autorização explícita: `boltctl list` confirma `authorized` e `stored`, e a interface Ethernet do dock aparece como `eth0` (sem cabo conectado no teste). O domínio USB4 reporta `iommu_dma_protection=0`; a autorização persistente confia nesse dock sem proteção DMA declarada. Até agora o Niri só detecta o monitor em `HDMI-A-1`, portanto vídeo via dock ainda não foi comprovado.
+
+O prompt Starship é gerado por `home/fernando/programs/starship.nix` via Home Manager integrado ao NixOS. Após corrigir seu `format`, reconstrua e ative a geração do mini-PC para atualizar `~/.config/starship.toml`; abrir um novo Fish recarrega o prompt. As quebras de linha do prompt são literais (`\n` no Nix), sem barra invertida antes de cada módulo.
+
+No Wayland, o Ghostty (GTK 4.20+) precisa de um método de entrada para compor dead keys. Um drop-in de sua unidade systemd define `GTK_IM_MODULE=simple` apenas para o Ghostty; a mudança só alcança janelas novas após reiniciar a unidade, o que fecha as janelas atuais.
 
 A configuração Niri do NixOS replica teclado, mouse, layout, saídas `DP-1` (`5120x1440@119.999`) e `HDMI-A-1` (`5120x1440@59.977`) e os atalhos do ChezMoi. O primeiro login NixOS registrou `HDMI-A-1` com o modo solicitado; `DP-1` não estava conectado. Com o plugin `kenn/keybind-cheatsheet` instalado declarativamente, `Mod+Shift+Slash` abre novamente o mesmo cheatsheet do Ubuntu. As cores dinâmicas de `noctalia.kdl` ainda não são incluídas pelo Niri, pois o Home Manager valida `config.kdl` na store antes de o Noctalia gerar esse arquivo; as regras de janela do Noctalia no NixOS permanecem explícitas. As duas fontes não se atualizam automaticamente.
 

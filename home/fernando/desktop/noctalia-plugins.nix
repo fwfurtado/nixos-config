@@ -40,10 +40,10 @@ in
     ];
   };
 
-  # Wallpaper Depth runs python3 directly; its ONNX dependencies must be
-  # available to the Noctalia user service without a plugin-managed venv.
+  # Wallpaper Depth needs Python; greeter sync must resolve the setuid pkexec
+  # wrapper before the non-setuid binary in the system profile.
   home.packages = lib.optionals isMinipc [ depthPython ];
   systemd.user.services.noctalia.Service.Environment = lib.mkIf isMinipc [
-    "PATH=${lib.makeBinPath [ depthPython ]}:${config.home.profileDirectory}/bin:/run/current-system/sw/bin"
+    "PATH=/run/wrappers/bin:${lib.makeBinPath [ depthPython ]}:${config.home.profileDirectory}/bin:/run/current-system/sw/bin"
   ];
 }

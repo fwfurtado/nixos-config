@@ -24,4 +24,13 @@
       "initial-command" = "tuios";
     };
   };
+
+  # GTK 4.20+ on Wayland no longer composes dead keys without an input method.
+  # Keep this fallback scoped to Ghostty, not every GTK application.
+  xdg.configFile = lib.optionalAttrs (homePlatform == "linux" && homeDesktop) {
+    "systemd/user/app-com.mitchellh.ghostty.service.d/ime.conf".text = ''
+      [Service]
+      Environment=GTK_IM_MODULE=simple
+    '';
+  };
 }

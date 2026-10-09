@@ -6,6 +6,7 @@
   ];
 
   networking.hostName = "fw-minipc";
+  time.timeZone = "America/Sao_Paulo";
 
   # Only WD_BLACK SN7100 (serial 254432804382) was repartitioned for NixOS.
   # NVMe numbers can swap across reboots; labels select this disk's filesystems,
@@ -47,6 +48,9 @@
     cpu.amd.updateMicrocode = true;
     graphics.enable = true;
   };
+
+  # Pair approved USB4/Thunderbolt docks; never auto-authorize unknown devices.
+  services.hardware.bolt.enable = true;
   zramSwap.enable = true;
 
   # SOPS decrypts into /run/secrets; neither internal routes nor hosts data
