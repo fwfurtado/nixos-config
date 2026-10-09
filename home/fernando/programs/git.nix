@@ -54,13 +54,13 @@
         ff = "only";
       };
 
-      url."git@github.com:" = {
-        insteadOf = "https://github.com/";
-        pushInsteadOf = [
-          "github:"
-          "git://github.com/"
-        ];
-      };
+      # Keep public HTTPS clones (including vim.pack) independent of SSH host
+      # keys; pushes to GitHub still use the configured SSH identity.
+      url."git@github.com:".pushInsteadOf = [
+        "https://github.com/"
+        "github:"
+        "git://github.com/"
+      ];
 
       alias = {
         hdiff = ''-c core.pager="hunk pager" diff'';

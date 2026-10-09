@@ -216,6 +216,10 @@ No macOS, o Home Manager escreve a configuração do Ghostty, mas o pacote Nix f
 O Home Manager instala o lockfile editável do Neovim sem acessar a rede durante a ativação. O `vim.pack.add` baixa os plugins quando o Neovim é aberto pela primeira vez; atualizações posteriores são feitas no próprio editor, não no boot.
 >>>>>>> 5decb96 (feat(nixos): add mini-PC desktop and services)
 
+Os plugins públicos do `vim.pack.add` são buscados por HTTPS. A configuração Git não converte clones `https://github.com/` para SSH; apenas os pushes correspondentes usam `git@github.com:`. Assim, o primeiro início do Neovim não depende de chave SSH nem de `known_hosts` do GitHub.
+
+O `nvim-treesitter` compila parsers na primeira abertura do editor. O ambiente do Neovim inclui `tree-sitter` CLI e `gcc` em `extraPackages`; eles não precisam estar no `PATH` global do shell.
+
 
 ## Build
 

@@ -15,6 +15,9 @@ in
     initLua = builtins.readFile ./neovim/init.lua;
 
     extraPackages = with pkgs; [
+      # nvim-treesitter builds parsers on first use.
+      tree-sitter
+      gcc
       ripgrep
       gopls
       rust-analyzer
