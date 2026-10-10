@@ -46,3 +46,17 @@
 
 [inputs.nixpkgs]
 url = "github:NixOS/nixpkgs/nixos-unstable"
+
+[inputs.noctalia]
+url = "github:noctalia-dev/noctalia"
+
+[inputs.sops-nix]
+url = "github:Mic92/sops-nix"
+
+[inputs.home-manager]
+url = "github:nix-community/home-manager"
+follows = { nixpkgs = "nixpkgs" }
+
+[inputs.system-manager]
+url = "github:numtide/system-manager"
+type = "fetch"

@@ -1,0 +1,244 @@
+config_version = 14
+
+[bar]
+order = [ "default", "Bottom" ]
+
+    [bar.Bottom]
+    center = [ "bar_2" ]
+    concave_edge_corners = false
+    enabled = true
+    end = [ "audio_visualizer", "media" ]
+    layer = "overlay"
+    margin_ends = 2000
+    padding = 50
+    panel_overlap = 0
+    position = "bottom"
+    reserve_space = false
+    show_on_workspace_switch = false
+    smart_auto_hide = true
+    start = [ "wallhaven_2", "bar_3" ]
+    thickness = 45
+
+    [bar.default]
+    end = [
+        "tray",
+        "notifications",
+        "clipboard",
+        "network",
+        "bluetooth",
+        "volume",
+        "brightness",
+        "control-center",
+        "session"
+    ]
+
+[brightness]
+enable_ddcutil = true
+
+[[control_center.shortcuts]]
+type = "wifi"
+
+[[control_center.shortcuts]]
+type = "bluetooth"
+
+[[control_center.shortcuts]]
+type = "caffeine"
+
+[[control_center.shortcuts]]
+type = "nightlight"
+
+[[control_center.shortcuts]]
+type = "notification"
+
+[dock]
+enabled = false
+
+[location]
+auto_locate = true
+
+[lockscreen_widgets]
+enabled = true
+schema_version = 2
+widget_order = [
+    "lockscreen-login-box@HDMI-A-1",
+    "lockscreen-login-box@DP-1",
+    "lockscreen-widget-0000000000000001",
+    "lockscreen-widget-0000000000000003",
+    "lockscreen-widget-0000000000000004"
+]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
+    box_height = 128.0
+    box_width = 810.0
+    cx = 2560.0
+    cy = 720.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 5120.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = false
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = false
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 2560.0
+    cy = 1197.3333740234375
+    output = "HDMI-A-1"
+    placement_height = 1440.0
+    placement_width = 5120.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000001]
+    box_height = 144.0
+    box_width = 224.0
+    cx = 2560.0
+    cy = 240.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 5120.0
+    rotation = 0.0
+    type = "clock"
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000003]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 2560.0
+    cy = 992.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 5120.0
+    rotation = 0.0
+    type = "fancy_audio_visualizer"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000003.settings]
+        background = false
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000004]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 2560.0
+    cy = 386.0
+    output = "DP-1"
+    placement_height = 1440.0
+    placement_width = 5120.0
+    rotation = 0.0
+    type = "weather"
+
+[notification]
+background_opacity = 0.4999999888241291
+position = "top_center"
+scale = 1.2000000104308128
+
+[osd]
+offset_y = 60
+scale = 1.5000000149011612
+
+[plugin_settings."ashur-d/nvim-projects"]
+projects_dir = "~/projects"
+
+[plugin_settings."noctalia/wallhaven"]
+download_dir = "/home/fwfurtado/Pictures/wallpapers/pc"
+
+[plugins]
+enabled = [
+    "noctalia/wallhaven",
+    "kenn/keybind-cheatsheet",
+    "noctalia/wallpaper_depth",
+    "raycursive/github-prs",
+    "ashur-d/nvim-projects"
+]
+
+[shell]
+password_style = "random"
+polkit_agent = true
+settings_window_translucent = true
+
+    [shell.greeter_sync]
+    auto_sync = true
+
+    [shell.screen_corners]
+    enabled = true
+
+[theme]
+builtin = "Eldritch"
+source = "wallpaper"
+
+    [theme.templates]
+    builtin_ids = [ "gtk3", "ghostty", "hyprland", "kitty", "niri" ]
+    community_ids = [ "zed", "fuzzel", "bat", "fzf", "glow", "herdr", "yazi" ]
+
+[wallpaper]
+directory = "/home/fwfurtado/Pictures/wallpapers/32x9"
+
+    [wallpaper.automation]
+    enabled = true
+
+    [wallpaper.default]
+    path = "/home/fwfurtado/Pictures/wallpapers/32x9/wallhaven-jel5dp.png"
+
+    [wallpaper.last]
+    path = "/home/fwfurtado/Pictures/wallpapers/32x9/wallhaven-jel5dp.png"
+
+    [wallpaper.monitors.DP-1]
+    path = "/home/fwfurtado/Pictures/wallpapers/pc/wallhaven-qrppzl.jpg"
+
+    [wallpaper.monitors.HDMI-A-1]
+    path = "/home/fwfurtado/Pictures/wallpapers/32x9/wallhaven-jel5dp.png"
+
+[widget.bar]
+type = "noctalia/wallpaper_depth:bar"
+
+[widget.bar_2]
+type = "raycursive/github-prs:bar"
+
+[widget.bar_3]
+type = "noctalia/wallpaper_depth:bar"
+
+[widget.clock]
+font_weight = 700
+format = "{:%D %H:%M}"
+scale = 1.2
+
+[widget.wallhaven]
+type = "noctalia/wallhaven:wallhaven"
+
+[widget.wallhaven_2]
+type = "noctalia/wallhaven:wallhaven"
