@@ -62,7 +62,7 @@ debug { honor-xdg-activation-with-invalid-serial; }
 binds {
     Mod+Shift+Slash { spawn "noctalia" "msg" "panel-toggle" "kenn/keybind-cheatsheet:cheatsheet"; }
 
-    Mod+Return { spawn "ghostty" "+new-window"; }
+    Mod+Return { spawn "tern" ; }
     Mod+Shift+Return { spawn "google-chrome"; }
     Mod+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
     Mod+V { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }

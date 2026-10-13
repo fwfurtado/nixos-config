@@ -90,6 +90,9 @@
     extraGroups = [ "wheel" "networkmanager" ];
     shell = pkgs.fish;
   };
+  # Only appearance-only greeter sync is passwordless for this local login;
+  # other administrative actions still require authorization.
+  services.displayManager.noctalia-greeter.passwordlessSyncUsers = [ "fwfurtado" ];
 
   environment.systemPackages = with pkgs; [
     beads
@@ -98,13 +101,15 @@
     xh
     gnumake
     kubectl
+    glib.bin
+    (callPackage ../../packages/tern-stencil.nix { })
   ];
 
   programs._1password-gui.enable = true;
   programs._1password.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg)
-      [ "1password" "1password-cli" "google-chrome" "slack" "obsidian" ];
+      [ "1password" "1password-cli" "google-chrome" "slack" "obsidian" "tern-stencil" ];
 
   # Only outgoing SSH is needed by the SOCKS tunnel; don't expose VM's
   # password-authenticated sshd on this host.
