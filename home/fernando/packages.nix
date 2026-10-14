@@ -10,6 +10,7 @@
     bat-extras.batman
     bat-extras.batpipe
     jq
+    rtk
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
   ];

@@ -25,6 +25,8 @@
     options = [ "umask=0077" ];
   };
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   boot = {
     initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" "sd_mod" ];
     kernelModules = [ "kvm-amd" ];
