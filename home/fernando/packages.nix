@@ -11,6 +11,7 @@
     bat-extras.batpipe
     jq
     rtk
+    dbeaver-bin
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
   ];
