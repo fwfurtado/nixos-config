@@ -54,9 +54,8 @@
         ff = "only";
       };
 
-      # Keep public HTTPS clones (including vim.pack) independent of SSH host
-      # keys; pushes to GitHub still use the configured SSH identity.
-      url."git@github.com:".pushInsteadOf = [
+      # Fetches, clones and pushes to GitHub use SSH, including public repositories.
+      url."git@github.com:".insteadOf = [
         "https://github.com/"
         "github:"
         "git://github.com/"

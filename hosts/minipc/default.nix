@@ -113,6 +113,7 @@
     builtins.elem (lib.getName pkg)
       [ "1password" "1password-cli" "google-chrome" "slack" "obsidian" "tern-stencil" ];
 
+  programs.nix-ld.enable = true;
   # Only outgoing SSH is needed by the SOCKS tunnel; don't expose VM's
   # password-authenticated sshd on this host.
   services.openssh.enable = lib.mkForce false;
