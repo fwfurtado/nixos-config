@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Tern
+Comment=Terminal workspace from Stencil
+Exec=@TERN_EXEC@
+Icon=utilities-terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+StartupNotify=true

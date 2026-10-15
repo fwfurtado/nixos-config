@@ -1,13 +1,49 @@
 {
   "$declared": {
-    "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable"
+    "home-manager": "github:nix-community/home-manager",
+    "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable",
+    "noctalia": "github:noctalia-dev/noctalia",
+    "sops-nix": "github:Mic92/sops-nix",
+    "system-manager": "github:numtide/system-manager"
+  },
+  "home-manager": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "home-manager",
+    "rev": "c58f54c733a7894d84fa2fdff26cc12088c4b78c",
+    "narHash": "sha256-0bK0A59rVUn1SRZzo4cNi4VSqAe7vR1gL2/MZl53Frw=",
+    "lastModified": 1791642191
   },
   "nixpkgs": {
     "type": "github",
     "owner": "NixOS",
     "repo": "nixpkgs",
-    "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
-    "narHash": "sha256-69xHQhAeMAD2wDXO7T2pcOZIF9Sga2W+JkmY2a11Ops=",
-    "lastModified": 1790822859
+    "rev": "7fd4004d0511991fff3a0524856a9be09e28c5f0",
+    "narHash": "sha256-i5qk1kLiit98rRbh1AXmWBNT9QXC/y4l5Wk/u5EdpDQ=",
+    "lastModified": 1791734076
+  },
+  "noctalia": {
+    "type": "github",
+    "owner": "noctalia-dev",
+    "repo": "noctalia",
+    "rev": "4b19e217461e92fb8b5a24f8ad411ee56d31adfb",
+    "narHash": "sha256-wnrd0PDcdkCUrv8M/TMu8kAqodOqIzMQ1wrRWMVYb4I=",
+    "lastModified": 1791906676
+  },
+  "sops-nix": {
+    "type": "github",
+    "owner": "Mic92",
+    "repo": "sops-nix",
+    "rev": "ee48786c6f9160d2c1a084aac841f68195b8420c",
+    "narHash": "sha256-mVD4XIc5JkqMW2K04IkFUzHgHmyJZlzw5ktfgMDCbKU=",
+    "lastModified": 1791710405
+  },
+  "system-manager": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "system-manager",
+    "rev": "10cdedb88b151f5e47250fab1319c55733a2bbad",
+    "narHash": "sha256-sci7f9fmhTeshuFNBbSEzYUSY1UUW7rmbdpkPLaVAgw=",
+    "lastModified": 1791883182
   }
 }
