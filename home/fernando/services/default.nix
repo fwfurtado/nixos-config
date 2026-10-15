@@ -1,6 +1,8 @@
 { lib, homeTailnetProxy ? false, ... }:
 {
-  imports = lib.optionals homeTailnetProxy [
+  imports = [
+    ./easyeffects.nix
+  ] ++ lib.optionals homeTailnetProxy [
     ./proxy.nix
   ];
 }
