@@ -6,7 +6,7 @@ let
   pkgs = import inputs.nixpkgs {
     inherit system;
     config.allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) [ "google-chrome" "slack" "obsidian" ];
+      builtins.elem (lib.getName pkg) [ "databricks-cli" "google-chrome" "slack" "obsidian" ];
   };
 
   homePlatform =

@@ -12,6 +12,7 @@
     jq
     rtk
     dbeaver-bin
+    databricks-cli
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
   ];
