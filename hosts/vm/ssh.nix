@@ -8,4 +8,6 @@
       KbdInteractiveAuthentication = true;
     };
   };
+
+  networking.firewall.allowedTCPPorts = [ 22 ];
 }

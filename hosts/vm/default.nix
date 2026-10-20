@@ -4,6 +4,7 @@
 {
   imports = [
     ../../modules
+    ./ssh.nix
   ];
 
   networking.hostName = "nixos-test";

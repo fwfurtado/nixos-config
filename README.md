@@ -34,8 +34,8 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 
 ## Estrutura
 
-- `system.nix` e `hosts/vm/`: sistema de teste com senha e console serial apenas para a VM
-- `minipc.nix` e `hosts/minipc/`: host real, storage/UEFI, 1Password, sing-box
+- `system.nix` e `hosts/vm/`: sistema de teste; `ssh.nix` limita o SSH com senha à VM
+- `minipc.nix` e `hosts/minipc/`: host real; `storage.nix` (discos/UEFI), `secrets.nix` (SOPS) e `software.nix` (pacotes/overlay)
 - `home.nix` e `home/fernando/`: Home Manager standalone e integrado ao NixOS; o nome de usuário é parametrizado por host
 - `standalone-system.nix`: greetd e sessão Niri no Ubuntu/Fedora via System Manager
 - `.tack/`: resolver, pins e lockfile; `nixpkgs` acompanha `nixos-unstable`
@@ -46,7 +46,7 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 
 O Ubuntu usa a raiz e a ESP do Samsung SSD 980 PRO (serial `S76ENU0XA00371M`, `/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S76ENU0XA00371M`). **Somente** o WD_BLACK SN7100 (serial `254432804382`, `/dev/disk/by-id/nvme-WD_BLACK_SN7100_2TB_254432804382`) foi reparticionado; a partição anterior `models` foi apagada sem backup por escolha do proprietário. **Os números `/dev/nvme0n1` e `/dev/nvme1n1` inverteram após reiniciar:** nunca use esses números para identificar o disco a apagar. Confirme sempre modelo, serial, partições e montagens com `lsblk`, `findmnt` e `/dev/disk/by-id`. Não formate a ESP do Ubuntu.
 
-O WD_BLACK contém três filesystems independentes por **rótulo**: `nixos-esp` (FAT32, 1 GiB, `/boot`), `nixos-root` (ext4, 200 GiB, `/`) e `nixos-home` (ext4, restante do disco, `/home`). Não há LUKS nem hibernação; zram fornece swap. Os rótulos correspondem a `hosts/minipc/default.nix`.
+O WD_BLACK contém três filesystems independentes por **rótulo**: `nixos-esp` (FAT32, 1 GiB, `/boot`), `nixos-root` (ext4, 200 GiB, `/`) e `nixos-home` (ext4, restante do disco, `/home`). Não há LUKS nem hibernação; zram fornece swap. Os rótulos correspondem a `hosts/minipc/storage.nix`.
 
 O firmware está com Secure Boot **desativado, sem apagar as chaves nem `dbx`**. A ESP do WD_BLACK contém `systemd-boot` para as gerações NixOS. Ela também recebeu rEFInd para um teste temporário de escolha entre NixOS e Ubuntu: o menu apareceu uma vez via `BootNext`, que é descartado após o boot. O Ubuntu continua como padrão do firmware; para entrar no NixOS, selecione o WD_BLACK no setup/boot menu. Não há plano de manter um menu dual-boot permanente, pois o dual boot é temporário e o destino terá um único disco. Os arquivos do rEFInd ainda são copiados por `boot.loader.systemd-boot.extraFiles`, sem tocar na ESP do Samsung. `boot.loader.efi.canTouchEfiVariables = false` impede que rebuilds alterem a prioridade do firmware. Reativar Secure Boot impediria o boot sem assinar os programas EFI e kernels.
 
@@ -77,7 +77,7 @@ sudo install -d -m 0700 /mnt/nixos/var/lib/sops-nix
 sudo install -m 0600 ~/.local/state/nixos-config/minipc-age-key.txt /mnt/nixos/var/lib/sops-nix/key.txt
 ```
 
-Compare a saída de `nixos-generate-config --root /mnt/nixos --show-hardware-config` com `hosts/minipc/default.nix`, sem importar definições duplicadas de filesystem. A configuração inclui os módulos detectados `thunderbolt` e `kvm-amd` e o microcódigo AMD. Construa a geração e instale exatamente essa geração com as ferramentas do mesmo `nixpkgs` pinado:
+Compare a saída de `nixos-generate-config --root /mnt/nixos --show-hardware-config` com `hosts/minipc/storage.nix`, sem importar definições duplicadas de filesystem. A configuração inclui os módulos detectados `thunderbolt` e `kvm-amd` e o microcódigo AMD. Construa a geração e instale exatamente essa geração com as ferramentas do mesmo `nixpkgs` pinado:
 
 ```bash
 make minipc-build
@@ -128,7 +128,7 @@ O Home Manager instala o lockfile editável do Neovim sem acessar a rede durante
 
 O Ubuntu usa a raiz e a ESP do Samsung SSD 980 PRO (serial `S76ENU0XA00371M`, `/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S76ENU0XA00371M`). **Somente** o WD_BLACK SN7100 (serial `254432804382`, `/dev/disk/by-id/nvme-WD_BLACK_SN7100_2TB_254432804382`) foi reparticionado; a partição anterior `models` foi apagada sem backup por escolha do proprietário. **Os números `/dev/nvme0n1` e `/dev/nvme1n1` inverteram após reiniciar:** nunca use esses números para identificar o disco a apagar. Confirme sempre modelo, serial, partições e montagens com `lsblk`, `findmnt` e `/dev/disk/by-id`. Não formate a ESP do Ubuntu.
 
-O WD_BLACK contém três filesystems independentes por **rótulo**: `nixos-esp` (FAT32, 1 GiB, `/boot`), `nixos-root` (ext4, 200 GiB, `/`) e `nixos-home` (ext4, restante do disco, `/home`). Não há LUKS nem hibernação; zram fornece swap. Os rótulos correspondem a `hosts/minipc/default.nix`.
+O WD_BLACK contém três filesystems independentes por **rótulo**: `nixos-esp` (FAT32, 1 GiB, `/boot`), `nixos-root` (ext4, 200 GiB, `/`) e `nixos-home` (ext4, restante do disco, `/home`). Não há LUKS nem hibernação; zram fornece swap. Os rótulos correspondem a `hosts/minipc/storage.nix`.
 
 O firmware está com Secure Boot **desativado, sem apagar as chaves nem `dbx`**. A ESP do WD_BLACK contém `systemd-boot` para as gerações NixOS. Ela também recebeu rEFInd para um teste temporário de escolha entre NixOS e Ubuntu: o menu apareceu uma vez via `BootNext`, que é descartado após o boot. O Ubuntu continua como padrão do firmware; para entrar no NixOS, selecione o WD_BLACK no setup/boot menu. Não há plano de manter um menu dual-boot permanente, pois o dual boot é temporário e o destino terá um único disco. Os arquivos do rEFInd ainda são copiados por `boot.loader.systemd-boot.extraFiles`, sem tocar na ESP do Samsung. `boot.loader.efi.canTouchEfiVariables = false` impede que rebuilds alterem a prioridade do firmware. Reativar Secure Boot impediria o boot sem assinar os programas EFI e kernels.
 
@@ -161,7 +161,7 @@ sudo install -d -m 0700 /mnt/nixos/var/lib/sops-nix
 sudo install -m 0600 ~/.local/state/nixos-config/minipc-age-key.txt /mnt/nixos/var/lib/sops-nix/key.txt
 ```
 
-Compare a saída de `nixos-generate-config --root /mnt/nixos --show-hardware-config` com `hosts/minipc/default.nix`, sem importar definições duplicadas de filesystem. A configuração inclui os módulos detectados `thunderbolt` e `kvm-amd` e o microcódigo AMD. Construa a geração e instale exatamente essa geração com as ferramentas do mesmo `nixpkgs` pinado:
+Compare a saída de `nixos-generate-config --root /mnt/nixos --show-hardware-config` com `hosts/minipc/storage.nix`, sem importar definições duplicadas de filesystem. A configuração inclui os módulos detectados `thunderbolt` e `kvm-amd` e o microcódigo AMD. Construa a geração e instale exatamente essa geração com as ferramentas do mesmo `nixpkgs` pinado:
 
 ```bash
 make minipc-build
@@ -197,11 +197,11 @@ No WD, o estado Noctalia anterior foi preservado em `~/.local/state/noctalia/set
 
 O Home Manager instala Google Chrome (atalho `Mod+Shift+Return`), Zed, Slack e Obsidian; GitHub CLI, fzf, fd, mergiraf e ec já estavam declarados. Os módulos do host ativam o aplicativo e o CLI do 1Password. Beekeeper Studio não foi incluído: o pacote `beekeeper-studio-6.1.4` deste pin foi marcado pelo nixpkgs como inseguro devido ao Electron 39.8.10 fora de suporte, e o proprietário escolheu aguardar uma versão corrigida.
 
-O `databricks-cli` está no perfil do Home Manager; a licença proprietária é permitida apenas para esse pacote nos predicados do mini-PC (`hosts/minipc/default.nix`) e do perfil standalone (`home.nix`), sem habilitar globalmente `allowUnfree`.
+O `databricks-cli` está no perfil do Home Manager; a licença proprietária é permitida apenas para esse pacote nos predicados do mini-PC (`hosts/minipc/software.nix`) e do perfil standalone (`home.nix`), sem habilitar globalmente `allowUnfree`.
 
 No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx; **não** ativa um daemon local nem concede ao usuário acesso ao socket Docker. Para executar contêineres localmente, a configuração do serviço e suas permissões precisam de uma decisão separada.
 
-O nixpkgs fixado declara um hash de fonte desatualizado para `omp` 18.11.0. O overlay em `hosts/minipc/default.nix` mantém a mesma versão, mas fixa a revisão `c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4` e seu hash verificado; ele se aplica tanto ao pacote do sistema quanto às integrações do shell.
+O nixpkgs fixado declara um hash de fonte desatualizado para `omp` 18.11.0. O overlay em `hosts/minipc/software.nix` mantém a mesma versão, mas fixa a revisão `c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4` e seu hash verificado; ele se aplica tanto ao pacote do sistema quanto às integrações do shell.
 
 O mini-PC também instala o Tern da Stencil 0.8.3 via `packages/tern-stencil.nix`: a derivação fixa o tarball glibc por URL e SHA-256, corrige o interpretador e as bibliotecas ELF com `autoPatchelfHook` e expõe `tern` no perfil do sistema. O endpoint da beta redireciona requisições sem sessão para o login; em uma máquina sem acesso autenticado, baixe o tarball fora do build e confira que seu SHA-256 seja `bcc202807a25c71858561a1f57e03de45fbde1913849302e34a2f0a36c6cfe79`. Com o arquivo em `~/Downloads/Tern-0.8.3-linux-x86_64.tar.gz`, `nix-store --add-fixed sha256 ~/Downloads/Tern-0.8.3-linux-x86_64.tar.gz` pré-popula o mesmo caminho de fonte que `fetchurl` espera, sem guardar credenciais na store; então rode `make minipc-build` e ative a geração. Um `~/.local/bin/tern` anterior pode ter precedência no `PATH`: use `/run/current-system/sw/bin/tern --version` para verificar o pacote. Atualizações exigem trocar a URL, versão e hash da derivação e reconstruir; a store não é atualizável pelo instalador interno do Tern.
 

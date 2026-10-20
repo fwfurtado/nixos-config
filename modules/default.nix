@@ -3,7 +3,6 @@
   imports = [
     ./desktop
     ./secrets
-    ./services
     ./home-manager.nix
     ./audio.nix
     ./bluetooth.nix
