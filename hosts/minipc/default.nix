@@ -27,5 +27,11 @@
   services.openssh.enable = false;
   networking.firewall.allowedTCPPorts = lib.mkForce [ ];
 
+  # K3s single-node
+  services.k3s = {
+      enable = true;
+      role = "server";
+  };
+
   system.stateVersion = "26.05";
 }
