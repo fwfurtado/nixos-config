@@ -10,6 +10,7 @@
     openssh.authorizedKeys.keys = [
       # Public signing key from home/fernando/programs/git.nix; push is allowed.
       "restrict ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGnjxWt9XUWWnP0ilRlAugrqYs0RKgfzn/3ZiyEKEENo"
+      "restrict,command=\"git-upload-pack '/var/lib/git/cluster.git'\" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHGKFsh+0mtgf9IL7Q9HoGIZvU2HvVnPKRvQkwDJx2/A flux@fw-minipc"
     ];
   };
 
