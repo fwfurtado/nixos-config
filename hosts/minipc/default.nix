@@ -6,6 +6,7 @@
     ./storage.nix
     ./secrets.nix
     ./software.nix
+    ./git-ssh.nix
   ];
 
   networking.hostName = "fw-minipc";
@@ -23,8 +24,7 @@
   # other administrative actions still require authorization.
   services.displayManager.noctalia-greeter.passwordlessSyncUsers = [ "fwfurtado" ];
 
-  # Only outgoing SSH is needed by the SOCKS tunnel.
-  services.openssh.enable = false;
+  # Keep the global inbound port list empty; git-ssh.nix opens only cni0.
   networking.firewall.allowedTCPPorts = lib.mkForce [ ];
 
   # K3s single-node

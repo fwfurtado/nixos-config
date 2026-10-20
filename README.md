@@ -35,11 +35,19 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 ## Estrutura
 
 - `system.nix` e `hosts/vm/`: sistema de teste; `ssh.nix` limita o SSH com senha à VM
-- `minipc.nix` e `hosts/minipc/`: host real; `storage.nix` (discos/UEFI), `secrets.nix` (SOPS) e `software.nix` (pacotes/overlay)
+- `minipc.nix` e `hosts/minipc/`: host real; `storage.nix` (discos/UEFI), `secrets.nix` (SOPS), `software.nix` (pacotes/overlay) e `git-ssh.nix` (Git local)
 - `home.nix` e `home/fernando/`: Home Manager standalone e integrado ao NixOS; o nome de usuário é parametrizado por host
 - `standalone-system.nix`: greetd e sessão Niri no Ubuntu/Fedora via System Manager
 - `.tack/`: resolver, pins e lockfile; `nixpkgs` acompanha `nixos-unstable`
 - `modules/`: módulos compartilhados; serviços exclusivos do mini-PC são importados pelo host
+
+### Git local do mini-PC
+
+`hosts/minipc/git-ssh.nix` ativa SSH somente para a conta `git`, autenticada por chave e limitada ao `git-shell`. A chave pública de assinatura em `home/fernando/programs/git.nix` autoriza push; a chave privada pessoal não entra no Nix. A porta 22 é liberada apenas em `cni0` para os pods do k3s, além do acesso local por loopback; a LAN não recebe a porta. `git-bare-repository.service` cria `/var/lib/git/cluster.git` na primeira ativação sem reinicializar um repositório existente.
+
+No NixOS já instalado, rode `make minipc-build` e `sudo nixos-rebuild switch -I nixos-config="$PWD/minipc.nix"` no diretório do projeto para ativar essa configuração.
+
+Para verificar após ativar a geração: `systemctl status git-bare-repository sshd`, `git ls-remote ssh://git@127.0.0.1/var/lib/git/cluster.git` e `git ls-remote ssh://git@10.42.0.1/var/lib/git/cluster.git` a partir de um pod com chave autorizada. Antes do primeiro push, o repositório vazio não lista referências. Para o controlador GitOps, gere **outro** par SSH fora do repositório; acrescente apenas sua chave pública a `users.users.git.openssh.authorizedKeys.keys` com a restrição `restrict,command="git-upload-pack '/var/lib/git/cluster.git'"`. Provisione a chave privada e a chave de host SSH verificada diretamente no Flux/Argo CD, sem versioná-las. Até essa chave pública ser adicionada, somente a chave pessoal pode ler o repositório.
 
 <<<<<<< HEAD
 ## Mini-PC: instalação direta a partir do Ubuntu
@@ -56,7 +64,7 @@ Para **apenas construir** o sistema, sem criar filesystem nem instalar:
 make minipc-build
 ```
 
-O perfil de VM segue independente (`make build`); sua senha conhecida e seu `sudo` sem senha não são importados pelo host real. O host real desabilita o servidor SSH de entrada. A conta `fwfurtado` precisa de senha definida com `passwd` no sistema alvo antes do primeiro login; não há credencial em claro nem hash de teste configurado para ela.
+O perfil de VM segue independente (`make build`); sua senha conhecida e seu `sudo` sem senha não são importados pelo host real. No mini-PC, o SSH de entrada fica restrito ao Git local por chave; `fwfurtado` não pode entrar por SSH. A conta `fwfurtado` precisa de senha definida com `passwd` no sistema alvo antes do primeiro login; não há credencial em claro nem hash de teste configurado para ela.
 
 ### Instalação a partir do Ubuntu, sem USB
 
@@ -138,7 +146,7 @@ Para **apenas construir** o sistema, sem criar filesystem nem instalar:
 make minipc-build
 ```
 
-O perfil de VM segue independente (`make build`); sua senha conhecida e seu `sudo` sem senha não são importados pelo host real. O host real desabilita o servidor SSH de entrada. A conta `fwfurtado` precisa de senha definida com `passwd` no sistema alvo antes do primeiro login; não há credencial em claro nem hash de teste configurado para ela.
+O perfil de VM segue independente (`make build`); sua senha conhecida e seu `sudo` sem senha não são importados pelo host real. No mini-PC, o SSH de entrada fica restrito ao Git local por chave; `fwfurtado` não pode entrar por SSH. A conta `fwfurtado` precisa de senha definida com `passwd` no sistema alvo antes do primeiro login; não há credencial em claro nem hash de teste configurado para ela.
 
 O mini-PC usa `America/Sao_Paulo` para exibir o horário local. O `systemd-timesyncd` permanece ativo para sincronizar automaticamente o relógio por NTP; `timedatectl status` mostra separadamente o fuso e o estado de sincronização.
 
