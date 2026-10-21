@@ -17,12 +17,14 @@
   # No copy of the VM's known password or passwordless wheel policy.
   users.users.fwfurtado = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "docker" ];
     shell = pkgs.fish;
   };
   # Only appearance-only greeter sync is passwordless for this local login;
   # other administrative actions still require authorization.
   services.displayManager.noctalia-greeter.passwordlessSyncUsers = [ "fwfurtado" ];
+
+  virtualisation.docker.enable = true;
 
   # Keep the global inbound port list empty; git-ssh.nix opens only cni0.
   networking.firewall.allowedTCPPorts = lib.mkForce [ ];

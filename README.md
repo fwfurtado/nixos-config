@@ -45,7 +45,7 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 
 `hosts/minipc/git-ssh.nix` ativa SSH somente para a conta `git`, autenticada por chave e limitada ao `git-shell`. A chave pública de assinatura em `home/fernando/programs/git.nix` autoriza push; a chave privada pessoal não entra no Nix. A porta 22 é liberada apenas em `cni0` para os pods do k3s, além do acesso local por loopback; a LAN não recebe a porta. `git-bare-repository.service` cria `/var/lib/git/cluster.git` na primeira ativação sem reinicializar um repositório existente.
 
-No NixOS já instalado, rode `make minipc-build` e `sudo nixos-rebuild switch -I nixos-config="$PWD/minipc.nix"` no diretório do projeto para ativar essa configuração.
+No NixOS já instalado, rode `make minipc-build` no diretório do projeto; `minipc.nix` retorna um sistema NixOS completo (não um módulo aceito por `nixos-rebuild -I nixos-config=...`). Para registrar e ativar a geração compilada, execute `sudo nix-env -p /nix/var/nix/profiles/system --set "$(readlink -f result-minipc)"` e `sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch`. O primeiro comando define também a geração usada no próximo boot.
 
 Para verificar após ativar a geração: `systemctl status git-bare-repository sshd`, `git ls-remote ssh://git@127.0.0.1/var/lib/git/cluster.git` e `git ls-remote ssh://git@10.42.0.1/var/lib/git/cluster.git` a partir de um pod com chave autorizada. Antes do primeiro push, o repositório vazio não lista referências. Para o controlador GitOps, gere **outro** par SSH fora do repositório; acrescente apenas sua chave pública a `users.users.git.openssh.authorizedKeys.keys` com a restrição `restrict,command="git-upload-pack '/var/lib/git/cluster.git'"`. Provisione a chave privada e a chave de host SSH verificada diretamente no Flux/Argo CD, sem versioná-las. Até essa chave pública ser adicionada, somente a chave pessoal pode ler o repositório.
 
@@ -113,7 +113,7 @@ No WD, o estado Noctalia anterior foi preservado em `~/.local/state/noctalia/set
 
 O Home Manager instala Google Chrome (atalho `Mod+Shift+Return`), Zed, Slack e Obsidian; GitHub CLI, fzf, fd, mergiraf e ec já estavam declarados. Os módulos do host ativam o aplicativo e o CLI do 1Password. Beekeeper Studio não foi incluído: o pacote `beekeeper-studio-6.1.4` deste pin foi marcado pelo nixpkgs como inseguro devido ao Electron 39.8.10 fora de suporte, e o proprietário escolheu aguardar uma versão corrigida.
 
-No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx; **não** ativa um daemon local nem concede ao usuário acesso ao socket Docker. Para executar contêineres localmente, a configuração do serviço e suas permissões precisam de uma decisão separada.
+No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
 
 ### Segredos e túnel SSH
 
@@ -207,7 +207,7 @@ O Home Manager instala Google Chrome (atalho `Mod+Shift+Return`), Zed, Slack e O
 
 O `databricks-cli` está no perfil do Home Manager; a licença proprietária é permitida apenas para esse pacote nos predicados do mini-PC (`hosts/minipc/software.nix`) e do perfil standalone (`home.nix`), sem habilitar globalmente `allowUnfree`.
 
-No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx; **não** ativa um daemon local nem concede ao usuário acesso ao socket Docker. Para executar contêineres localmente, a configuração do serviço e suas permissões precisam de uma decisão separada.
+No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
 
 O nixpkgs fixado declara um hash de fonte desatualizado para `omp` 18.11.0. O overlay em `hosts/minipc/software.nix` mantém a mesma versão, mas fixa a revisão `c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4` e seu hash verificado; ele se aplica tanto ao pacote do sistema quanto às integrações do shell.
 

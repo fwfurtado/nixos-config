@@ -13,6 +13,7 @@
     rtk
     dbeaver-bin
     databricks-cli
+    krew
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
   ];
