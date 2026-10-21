@@ -57,10 +57,11 @@ in
     Service = {
       Environment = [
         "AUTOSSH_GATETIME=0"
+        "AUTOSSH_POLL=60"
         "SSH_AUTH_SOCK=${agentSocket}"
       ];
       ExecStartPre = "${pkgs.coreutils}/bin/test -r ${secretPath}";
-      ExecStart = "${pkgs.autossh}/bin/autossh -M 0 -N vpn-proxy";
+      ExecStart = "${pkgs.autossh}/bin/autossh -M 20000 -N vpn-proxy";
       Restart = "always";
       RestartSec = 5;
     };
