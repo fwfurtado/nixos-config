@@ -47,6 +47,11 @@ window-rule {
     geometry-corner-radius 20
     clip-to-geometry true
 }
+// Keep Niri's focused border from filling Tern's translucent background.
+window-rule {
+    match app-id="^so\\.stencil\\.tern$"
+    draw-border-with-background false
+}
 window-rule {
     match app-id="dev.noctalia.Noctalia"
     open-floating true

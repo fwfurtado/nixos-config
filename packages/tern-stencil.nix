@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation {
   pname = "tern-stencil";
-  version = "0.8.3";
+  version = "0.9.5";
 
   src = fetchurl {
-    url = "https://build.stencil.so/d/tern/20261012-142610-e2b8656/Tern-0.8.3-linux-x86_64.tar.gz";
-    hash = "sha256-vMICgHolxxhYVhofV+A95F+94ZE4STAuNKLwo2xs/nk=";
+    url = "https://build.stencil.so/d/tern/20261019-233248-2863c37/Tern-0.9.5-linux-x86_64.tar.gz";
+    hash = "sha256-ApOSXrYtSrfOLOuLx17Ox6xYNeh+awudb+vn0MgKzlI=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook ];
