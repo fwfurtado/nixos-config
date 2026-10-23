@@ -14,6 +14,8 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  security.pki.certificateFiles = [ ./home-arpa-ca.crt ];
+
   # No copy of the VM's known password or passwordless wheel policy.
   users.users.fwfurtado = {
     isNormalUser = true;

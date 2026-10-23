@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, autoPatchelfHook, glibc, libxcb, libxkbcommon, vulkan-loader, libGL }:
+{ lib, stdenv, fetchurl, autoPatchelfHook, makeWrapper, glibc, libxcb, libxkbcommon, vulkan-loader, libGL, webkitgtk_4_1, glib-networking }:
 
 stdenv.mkDerivation {
   pname = "tern-stencil";
@@ -9,10 +9,15 @@ stdenv.mkDerivation {
     hash = "sha256-ApOSXrYtSrfOLOuLx17Ox6xYNeh+awudb+vn0MgKzlI=";
   };
 
-  nativeBuildInputs = [ autoPatchelfHook ];
+  nativeBuildInputs = [ autoPatchelfHook makeWrapper ];
   buildInputs = [ stdenv.cc.cc.lib glibc ];
-  # The window backend loads these at runtime rather than via ELF NEEDED.
-  runtimeDependencies = [ libxcb libxkbcommon vulkan-loader libGL ];
+  # The window backend and embedded browser load these via dlopen.
+  runtimeDependencies = [ libxcb libxkbcommon vulkan-loader libGL webkitgtk_4_1 ];
+
+  postFixup = ''
+    wrapProgram "$out/bin/tern" \
+      --prefix GIO_EXTRA_MODULES : "${glib-networking}/lib/gio/modules"
+  '';
 
   installPhase = ''
     runHook preInstall

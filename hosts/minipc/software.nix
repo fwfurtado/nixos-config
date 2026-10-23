@@ -25,6 +25,15 @@
     (callPackage ../../packages/tern-stencil.nix { })
   ];
 
+  # Keep the original package on PATH so its fish completion stays available.
+  home-manager.users.fwfurtado.programs.fish.functions.omp = {
+    description = "Run OMP with the NixOS CA bundle";
+    body = ''
+      set -lx SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
+      command omp $argv
+    '';
+  };
+
   programs._1password-gui.enable = true;
   programs._1password.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg:
