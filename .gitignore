@@ -1,3 +1,7 @@
 *.qcow2
 result
 result/
+*.age
+result-home
+result-minipc
+result-system

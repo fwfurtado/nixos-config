@@ -1,13 +1,7 @@
 { ... }:
 
 {
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = true;
-      KbdInteractiveAuthentication = true;
-    };
+  networking = {
+      networkmanager.enable = true;
   };
-
-  networking.firewall.allowedTCPPorts = [ 22 ];
 }
