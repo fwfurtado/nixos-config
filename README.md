@@ -35,7 +35,7 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 ## Estrutura
 
 - `system.nix` e `hosts/vm/`: sistema de teste; `ssh.nix` limita o SSH com senha à VM
-- `minipc.nix` e `hosts/minipc/`: host real; `storage.nix` (discos/UEFI), `secrets.nix` (SOPS), `software.nix` (pacotes/overlay) e `git-ssh.nix` (Git local)
+- `minipc.nix` e `hosts/minipc/`: host real; `storage.nix` (discos/UEFI), `secrets.nix` (SOPS), `software.nix` (pacotes) e `git-ssh.nix` (Git local)
 - `home.nix` e `home/fernando/`: Home Manager standalone e integrado ao NixOS; o nome de usuário é parametrizado por host
 - `standalone-system.nix`: greetd e sessão Niri no Ubuntu/Fedora via System Manager
 - `.tack/`: resolver, pins e lockfile; `nixpkgs` acompanha `nixos-unstable`
@@ -46,6 +46,8 @@ export PATH="$HOME/.nix-profile/bin:$PATH"
 `hosts/minipc/git-ssh.nix` ativa SSH somente para a conta `git`, autenticada por chave e limitada ao `git-shell`. A chave pública de assinatura em `home/fernando/programs/git.nix` autoriza push; a chave privada pessoal não entra no Nix. A porta 22 é liberada apenas em `cni0` para os pods do k3s, além do acesso local por loopback; a LAN não recebe a porta. `git-bare-repository.service` cria `/var/lib/git/cluster.git` na primeira ativação sem reinicializar um repositório existente.
 
 No NixOS já instalado, rode `make minipc-build` no diretório do projeto; `minipc.nix` retorna um sistema NixOS completo (não um módulo aceito por `nixos-rebuild -I nixos-config=...`). Para registrar e ativar a geração compilada, execute `sudo nix-env -p /nix/var/nix/profiles/system --set "$(readlink -f result-minipc)"` e `sudo /nix/var/nix/profiles/system/bin/switch-to-configuration switch`. O primeiro comando define também a geração usada no próximo boot.
+
+`rtk` é permitido explicitamente nas listas restritas de licenças não livres de `hosts/minipc/software.nix` e `home.nix`, pois o perfil Home Manager usa o pacote tanto no mini-PC quanto no modo standalone.
 
 Para verificar após ativar a geração: `systemctl status git-bare-repository sshd`, `git ls-remote ssh://git@127.0.0.1/var/lib/git/cluster.git` e `git ls-remote ssh://git@10.42.0.1/var/lib/git/cluster.git` a partir de um pod com chave autorizada. Antes do primeiro push, o repositório vazio não lista referências. Para o controlador GitOps, gere **outro** par SSH fora do repositório; acrescente apenas sua chave pública a `users.users.git.openssh.authorizedKeys.keys` com a restrição `restrict,command="git-upload-pack '/var/lib/git/cluster.git'"`. Provisione a chave privada e a chave de host SSH verificada diretamente no Flux/Argo CD, sem versioná-las. Até essa chave pública ser adicionada, somente a chave pessoal pode ler o repositório.
 
@@ -209,7 +211,7 @@ O `databricks-cli` está no perfil do Home Manager; a licença proprietária é 
 
 No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
 
-O nixpkgs fixado declara um hash de fonte desatualizado para `omp` 18.11.0. O overlay em `hosts/minipc/software.nix` mantém a mesma versão, mas fixa a revisão `c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4` e seu hash verificado; ele se aplica tanto ao pacote do sistema quanto às integrações do shell.
+`omp` usa a fonte e as dependências da mesma versão do nixpkgs fixado pelo Tack; o overlay antigo para 18.11.0 foi removido após o pin passar a fornecer 18.12.2.
 
 O mini-PC também instala o Tern da Stencil 0.9.5 via `packages/tern-stencil.nix`: a derivação fixa o tarball glibc por URL e SHA-256, corrige o interpretador e as bibliotecas ELF com `autoPatchelfHook` e expõe `tern` no perfil do sistema. O endpoint da beta redireciona requisições sem sessão para o login; em uma máquina sem acesso autenticado, baixe o tarball fora do build e confira que seu SHA-256 seja `0293925eb62d4ab7ce2ceb8bc75ecec7ac5835e87e6b0b9d6febe7d0c80ace52`. Com o arquivo em `~/Downloads/Tern-0.9.5-linux-x86_64.tar.gz`, `nix-store --add-fixed sha256 ~/Downloads/Tern-0.9.5-linux-x86_64.tar.gz` pré-popula o mesmo caminho de fonte que `fetchurl` espera, sem guardar credenciais na store; então rode `make minipc-build` e ative a geração. Um `~/.local/bin/tern` anterior pode ter precedência no `PATH`: use `/run/current-system/sw/bin/tern --version` para verificar o pacote. Atualizações exigem trocar a URL, versão e hash da derivação e reconstruir; a store não é atualizável pelo instalador interno do Tern.
 
@@ -371,3 +373,5 @@ tack update
 ```
 
 No Linux e macOS, Home Manager gerencia a configuração de usuário migrada; os arquivos já assumidos por ele devem sair do ChezMoi em cada máquina para evitar conflito de ativação.
+
+No perfil desktop Linux, `v4l-utils` fornece `qv4l2` (controles gráficos de webcam) e `v4l2-ctl` (controles via terminal).

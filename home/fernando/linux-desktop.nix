@@ -7,6 +7,7 @@
 
   home.packages = with pkgs; [
     wl-clipboard
+    v4l-utils
     google-chrome
     zed-editor
     slack

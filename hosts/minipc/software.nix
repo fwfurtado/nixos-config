@@ -1,19 +1,5 @@
 { lib, pkgs, ... }:
 {
-  # nixpkgs pins an outdated source hash for omp 18.11.0; pin the current tag commit.
-  nixpkgs.overlays = [
-    (final: prev: {
-      omp = prev.omp.overrideAttrs (_: {
-        src = final.fetchFromGitHub {
-          owner = "can1357";
-          repo = "oh-my-pi";
-          rev = "c2cb79e4c227aa4b22c4ccb933ff72fd88bceba4";
-          hash = "sha256-pIAoAc3vE8nfVacsY+IEGcQVFCfMvVrK5qPcxi7NTho=";
-        };
-      });
-    })
-  ];
-
   environment.systemPackages = with pkgs; [
     beads
     omp
@@ -38,7 +24,7 @@
   programs._1password.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg)
-      [ "1password" "1password-cli" "databricks-cli" "google-chrome" "slack" "obsidian" "tern-stencil" ];
+      [ "1password" "1password-cli" "databricks-cli" "google-chrome" "slack" "obsidian" "rtk" "tern-stencil" "v4l-utils" ];
 
   programs.nix-ld.enable = true;
 }
