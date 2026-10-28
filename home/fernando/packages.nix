@@ -14,6 +14,8 @@
     dbeaver-bin
     databricks-cli
     krew
+    gitbutler
+    but
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
   ];
