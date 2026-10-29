@@ -10,40 +10,40 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "6750249c69969d09d952efaf3fab88a2bdac7ec6",
-    "narHash": "sha256-3X34FaSeMJXMx8CK/BN6sZ9knwNauuiJXQhLM+bQQuI=",
-    "lastModified": 1792703141
+    "rev": "095fef2f265c3c0da4fe315efba8f8a04495ab34",
+    "narHash": "sha256-X6xa6sGA7RnJQuZGbFMC+K+KToWAlBDCCjJXfTwEPsw=",
+    "lastModified": 1793193205
   },
   "nixpkgs": {
     "type": "github",
     "owner": "NixOS",
     "repo": "nixpkgs",
-    "rev": "02c087f3fe673c9e317f206a627cb6b910336dbe",
-    "narHash": "sha256-IoNisKcGbUjdd45qCqywGMCYmZ5EnkxezvLII0FWwNA=",
-    "lastModified": 1792502884
+    "rev": "31ecbaca1bdefa45dffc409f0250bd8039ea0010",
+    "narHash": "sha256-dhoW6VgFWlaodSY5jrBn+CF2FLmaUvDVgM7+C7T2+NM=",
+    "lastModified": 1793110635
   },
   "noctalia": {
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "5f90509b7d0a4bc0c2c6d124cc0bf9ec101909c5",
-    "narHash": "sha256-iJzOkmA3RM210L82abth/xyEYp2bnjqXxifvoJ7aATk=",
-    "lastModified": 1792765407
+    "rev": "5803e464b73ee2d016478b39b9ecbbec36d95fb0",
+    "narHash": "sha256-X94ky49Q1WPJZHIM71SyKldc3+m/ER2KKDyZDFwjNto=",
+    "lastModified": 1793305173
   },
   "sops-nix": {
     "type": "github",
     "owner": "Mic92",
     "repo": "sops-nix",
-    "rev": "e80b8b733d8452a751a25d0063abc9683b6c8185",
-    "narHash": "sha256-4ChDjNgJM5uKwTuecLHxGlafAtoyKo5a7ip23J5IG3M=",
-    "lastModified": 1792655475
+    "rev": "60182817ee048ac94b4c68ea76d5ef2e8aac730d",
+    "narHash": "sha256-Y/JIHTnMlOabDfyaSBubWGLDIVGihLEUuoMhFvQKaDo=",
+    "lastModified": 1793052255
   },
   "system-manager": {
     "type": "github",
     "owner": "numtide",
     "repo": "system-manager",
-    "rev": "15d8876e7001965441384ad6a6ab52dce6fa478a",
-    "narHash": "sha256-pwFFodVRmQObesGOg3RFBq7EXE2sAX5N5Ob72vhi8Wk=",
-    "lastModified": 1792607061
+    "rev": "81d5c1e8b2924679c1adc7b67e536917c12b3571",
+    "narHash": "sha256-ZV34Z3i8D8bbPhWcAlr3PpZHtuqqgnELaciSoOblhlg=",
+    "lastModified": 1793041121
   }
 }
