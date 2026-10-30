@@ -375,3 +375,39 @@ tack update
 No Linux e macOS, Home Manager gerencia a configuração de usuário migrada; os arquivos já assumidos por ele devem sair do ChezMoi em cada máquina para evitar conflito de ativação.
 
 No perfil desktop Linux, `v4l-utils` fornece `qv4l2` (controles gráficos de webcam) e `v4l2-ctl` (controles via terminal).
+
+### Câmera virtual Tiny 3 Lite (mini-PC)
+
+O mini-PC declara o módulo `v4l2loopback` e o serviço de usuário `tiny-virtual-camera.service`. Após ativar a configuração do NixOS e reiniciar, escolha **Tiny 3 Lite Virtual** no Meet, Slack Huddle ou Zoom. O dispositivo fica disponível em `/dev/video42`; não é necessário abrir OBS ou iniciar comandos antes da chamada.
+
+Em repouso, o serviço fornece uma imagem preta à câmera virtual, sem abrir o fluxo de vídeo da Tiny 3 Lite física. Quando um aplicativo começa a capturar vídeo (inclusive na prévia), abre a câmera pelo caminho estável `/dev/v4l/by-id/`, aplica balanço de branco manual a 4000 K e saturação 47, e envia vídeo em 1280×720 a 30 fps. Após a primeira imagem, o SDK da OBSBOT ativa o rastreamento da pessoa no centro e o Auto Zoom de corpo inteiro; a descoberta da câmera pelo SDK pode levar alguns segundos na primeira chamada. Ao terminar a última captura, o serviço fecha o fluxo físico, envia o comando de repouso ao hardware e volta à imagem preta. Se o aplicativo permanecer na prévia, a captura continua ativa mesmo depois de sair da reunião. A configuração usa o evento de clientes do `v4l2loopback` 0.15.4; um produtor permanece conectado para que o dispositivo apareça no Chrome.
+
+O SDK Linux da OBSBOT é proprietário e **não fica no Git**. Para construir esta configuração no mini-PC, importe o SDK 2.1.0_8 obtido da OBSBOT para a Nix store local. O arquivo precisa ter exatamente o hash declarado em `packages/obsbot-sdk.nix`:
+
+```bash
+sdk="$HOME/Downloads/libdev_v2.1.0_8"
+archive="$HOME/Downloads/obsbot-libdev-2.1.0_8-linux-x86_64.tar.gz"
+tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner -czf "$archive" -C "$sdk" include linux/x86_64-release/libdev.so.1.0.0
+nix hash file --type sha256 --sri "$archive"
+nix-store --add-fixed sha256 "$archive"
+make minipc-build
+```
+
+O hash esperado é `sha256-q7jGPbpyTNz1oPiroRHaRtJ0UuFmEptnxuV8Ed7iTho=`. Em outra máquina, repita a importação antes de construir; o build não faz download do SDK nem versiona os binários. O SDK é usado apenas para os comandos de controle: o vídeo continua vindo pelo V4L2/FFmpeg. O controle remoto ainda pode mudar o rastreamento durante a chamada; os comandos iniciais do serviço serão aplicados novamente na próxima captura. Evite usar a câmera física diretamente ao mesmo tempo que a virtual, pois a suspensão ao final da captura virtual afeta o hardware inteiro.
+
+Na primeira ativação, `switch-to-configuration switch` troca a configuração, mas o `modprobe` ainda consulta os módulos de `/run/booted-system`. Como essa geração não contém o novo módulo, `/dev/video42` só aparecerá após reiniciar. Para usar sem reiniciar, carregue explicitamente o módulo da geração atual:
+
+```bash
+sudo modprobe --dirname /run/current-system/kernel-modules v4l2loopback
+systemctl --user restart tiny-virtual-camera.service
+```
+
+Para verificar após a ativação:
+
+```bash
+systemctl --user status tiny-virtual-camera.service
+v4l2-ctl --list-devices
+journalctl --user -u tiny-virtual-camera.service -f
+```
+
+`make minipc-build` apenas compila: não carrega o módulo nem inicia o serviço. A webcam física ainda pode ser escolhida diretamente nos aplicativos, mas isso contorna os controles do serviço.

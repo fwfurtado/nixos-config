@@ -7,6 +7,7 @@
     ./secrets.nix
     ./software.nix
     ./git-ssh.nix
+    ./virtual-camera.nix
   ];
 
   networking.hostName = "fw-minipc";

@@ -24,7 +24,7 @@
   programs._1password.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg)
-      [ "1password" "1password-cli" "databricks-cli" "google-chrome" "slack" "obsidian" "rtk" "tern-stencil" "v4l-utils" "gitbutler" "but"];
+      [ "1password" "1password-cli" "databricks-cli" "google-chrome" "slack" "obsidian" "rtk" "tern-stencil" "v4l-utils" "gitbutler" "but" "obsbot-libdev" ];
 
   programs.nix-ld.enable = true;
 }
