@@ -5,6 +5,50 @@ let
     if standalone
     then config.sops.secrets."vpn-proxy-user".path
     else homeProxyUserSecretPath;
+  checkProxy = pkgs.writeShellScript "check-vpn-proxy" ''
+    set -eu
+
+    state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/vpn-proxy"
+    state_file="$state_dir/health"
+    mkdir -p "$state_dir"
+
+    state=unknown
+    if [ -r "$state_file" ]; then
+      IFS= read -r state < "$state_file" || :
+    fi
+
+    notify() {
+      echo "vpn-proxy-health: $1"
+      ${pkgs.libnotify}/bin/notify-send "VPN proxy" "$1" || :
+    }
+
+    if ${pkgs.curl}/bin/curl --disable \
+        --proxy socks5h://127.0.0.1:1080 \
+        --connect-timeout 3 --max-time 10 \
+        --fail --silent --show-error --output /dev/null \
+        https://example.com/ 2>/dev/null
+    then
+      if [ "$state" = down ]; then
+        notify "Proxy voltou a funcionar"
+      fi
+      if [ "$state" != healthy ]; then
+        printf '%s\n' healthy > "$state_file"
+      fi
+    else
+      case "$state" in
+        unknown|healthy) next=failed-1 ;;
+        failed-1)       next=failed-2 ;;
+        *)              next=down ;;
+      esac
+
+      if [ "$next" = down ] && [ "$state" != down ]; then
+        notify "Proxy indisponível"
+      fi
+      if [ "$state" != "$next" ]; then
+        printf '%s\n' "$next" > "$state_file"
+      fi
+    fi
+  '';
 in
 {
   imports = lib.optionals standalone [
@@ -66,5 +110,23 @@ in
       RestartSec = 5;
     };
     Install.WantedBy = [ "default.target" ];
+  };
+
+  systemd.user.services.vpn-proxy-health = {
+    Unit.Description = "Check VPN proxy reachability";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${checkProxy}";
+    };
+  };
+
+  systemd.user.timers.vpn-proxy-health = {
+    Unit.Description = "Periodically check VPN proxy";
+    Timer = {
+      OnStartupSec = "1min";
+      OnUnitActiveSec = "1min";
+      Unit = "vpn-proxy-health.service";
+    };
+    Install.WantedBy = [ "timers.target" ];
   };
 }
