@@ -16,6 +16,7 @@
     krew
     gitbutler
     but
+    teleport
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
   ];
