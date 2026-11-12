@@ -80,7 +80,7 @@ sudo mount /dev/disk/by-label/nixos-home /mnt/nixos/home
 sudo mount -o umask=0077 /dev/disk/by-label/nixos-esp /mnt/nixos/boot
 ```
 
-Uma **chave age exclusiva do host já foi gerada**, adicionada a `.sops.yaml` e usada para cifrar os segredos. O arquivo privado está fora do Git, em `~/.local/state/nixos-config/minipc-age-key.txt` (0600). A chave foi salva no 1Password; a recuperação, a chave pública e a descriptografia de `secrets/sing-box-config.enc` foram testadas com `op run`. Provisionar a chave privada no destino antes de ativar os segredos:
+Uma **chave age exclusiva do host já foi gerada**, adicionada a `.sops.yaml` e usada para cifrar os segredos. O arquivo privado está fora do Git, em `~/.local/state/nixos-config/minipc-age-key.txt` (0600). A chave foi salva no 1Password; a recuperação, a chave pública e a descriptografia dos segredos do sing-box foram testadas com `op run`. Provisionar a chave privada no destino antes de ativar os segredos:
 
 ```bash
 sudo install -d -m 0700 /mnt/nixos/var/lib/sops-nix
@@ -119,7 +119,7 @@ No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, 
 
 ### Segredos e túnel SSH
 
-A configuração e a tabela de hosts do sing-box ficam cifradas em `secrets/sing-box-{config,hosts}.enc`; sops-nix disponibiliza os arquivos somente ao usuário de sistema `sing-box` em `/run/secrets`. Como a instalação escolhida não usa LUKS, acesso físico ao disco ainda expõe a chave age local. Não versionar tokens de sessão nem exportá-los ao ambiente global do `systemd --user`
+A configuração pública do sing-box está em `modules/services/system/sing-box.json`, incluindo as regras `domain_suffix` para `home`, `hosts` e `udp`. Somente o rule-set do proxy (`secrets/sing-box-domains-proxy.enc`) e a tabela de hosts (`secrets/sing-box-hosts.enc`) permanecem cifrados; sops-nix os disponibiliza apenas ao usuário de sistema `sing-box` em `/run/secrets`. Como a instalação escolhida não usa LUKS, acesso físico ao disco ainda expõe a chave age local. Não versionar tokens de sessão nem exportá-los ao ambiente global do `systemd --user`.
 
 Após login e desbloqueio do 1Password, `vpn-proxy.service` usa `autossh` com o alias SSH `vpn-proxy` para abrir SOCKS em `127.0.0.1:1080`. A diretiva SSH `User` fica cifrada em `secrets/vpn-proxy-user.enc`: o alias inclui o arquivo decifrado por sops-nix somente em tempo de execução, sem registrar o usuário no módulo Nix ou nos argumentos do serviço. No NixOS, sops-nix o entrega ao usuário `fwfurtado` em `/run/secrets/vpn-proxy-user`; no Linux standalone, sops-nix do Home Manager o entrega em `$XDG_RUNTIME_DIR/secrets.d` e precisa da chave age em `~/.config/sops/age/keys.txt`. Exporte **somente a chave pública** da chave exclusiva do túnel no 1Password para `~/.ssh/vpn-proxy.pub`, autorize-a no Mac e confira a fingerprint SSH do Mac. Antes de o túnel funcionar, as rotas corporativas do `sing-box` que dependem desse SOCKS não estarão acessíveis. `active (running)` não comprova a conexão: teste o SOCKS e uma rota corporativa permitida.
 
@@ -166,7 +166,7 @@ sudo mount /dev/disk/by-label/nixos-home /mnt/nixos/home
 sudo mount -o umask=0077 /dev/disk/by-label/nixos-esp /mnt/nixos/boot
 ```
 
-Uma **chave age exclusiva do host já foi gerada**, adicionada a `.sops.yaml` e usada para cifrar os segredos. O arquivo privado está fora do Git, em `~/.local/state/nixos-config/minipc-age-key.txt` (0600). A chave foi salva no 1Password; a recuperação, a chave pública e a descriptografia de `secrets/sing-box-config.enc` foram testadas com `op run`. Provisionar a chave privada no destino antes de ativar os segredos:
+Uma **chave age exclusiva do host já foi gerada**, adicionada a `.sops.yaml` e usada para cifrar os segredos. O arquivo privado está fora do Git, em `~/.local/state/nixos-config/minipc-age-key.txt` (0600). A chave foi salva no 1Password; a recuperação, a chave pública e a descriptografia dos segredos do sing-box foram testadas com `op run`. Provisionar a chave privada no destino antes de ativar os segredos:
 
 ```bash
 sudo install -d -m 0700 /mnt/nixos/var/lib/sops-nix
@@ -226,7 +226,9 @@ O pacote instala `so.stencil.tern.desktop` em `share/applications`, com o mesmo 
 
 ### Segredos e túnel SSH
 
-A configuração e a tabela de hosts do sing-box ficam cifradas em `secrets/sing-box-{config,hosts}.enc`; sops-nix disponibiliza os arquivos somente ao usuário de sistema `sing-box` em `/run/secrets`. Como a instalação escolhida não usa LUKS, acesso físico ao disco ainda expõe a chave age local. Não versionar tokens de sessão nem exportá-los ao ambiente global do `systemd --user`; **rotacione os tokens exibidos pela configuração antiga antes de migrá-los**.
+A configuração pública do sing-box está em `modules/services/system/sing-box.json`: as condições `domain_suffix` para DNS local (`home`, `hosts` e `udp`) ficam diretamente nas regras JSON. Somente o conjunto de domínios do proxy em `secrets/sing-box-domains-proxy.enc` permanece como rule-set cifrado, usado tanto pelo DNS quanto pela rota SOCKS. A tabela de hosts continua cifrada em `secrets/sing-box-hosts.enc`. sops-nix entrega ambos apenas ao usuário `sing-box` em `/run/secrets`; alterações no rule-set do proxy reiniciam o serviço após a ativação. O JSON público inclui domínios e endereços de rede e resolvedores: revise outros dados sensíveis antes de versionar novas regras. Como não há LUKS, acesso físico ao disco ainda expõe a chave age local. Não versionar tokens de sessão nem exportá-los ao ambiente global do `systemd --user`; **rotacione os tokens exibidos pela configuração antiga antes de migrá-los**.
+
+Para alterar os domínios locais, edite `modules/services/system/sing-box.json`. Para editar o rule-set privado sem criar JSON aberto no repositório, use `op run --env-file sops.env -- nix-shell -p sops --run 'sops edit --input-type binary --output-type binary secrets/sing-box-domains-proxy.enc'`. O arquivo aberto no editor tem formato JSON de rule-set `source`; o `.enc` permanece binário para o SOPS. Após editar, compile com `make minipc-build`, ative a geração conforme acima e valide `sudo sing-box check -C /run/sing-box` antes de reiniciar `sing-box.service` se necessário. Não compile um `.srs` no Git: binário não é criptografia.
 
 Após login e desbloqueio do 1Password, `vpn-proxy.service` usa `autossh` com o alias SSH `vpn-proxy` para abrir SOCKS em `127.0.0.1:1080`. A diretiva SSH `User` fica cifrada em `secrets/vpn-proxy-user.enc`: o alias inclui o arquivo decifrado por sops-nix somente em tempo de execução, sem registrar o usuário no módulo Nix ou nos argumentos do serviço. No NixOS, sops-nix o entrega ao usuário `fwfurtado` em `/run/secrets/vpn-proxy-user`; no Linux standalone, sops-nix do Home Manager o entrega em `$XDG_RUNTIME_DIR/secrets.d` e precisa da chave age em `~/.config/sops/age/keys.txt`. Exporte **somente a chave pública** da chave exclusiva do túnel no 1Password para `~/.ssh/vpn-proxy.pub`, autorize-a no Mac e confira a fingerprint SSH do Mac. Antes de o túnel funcionar, as rotas corporativas do `sing-box` que dependem desse SOCKS não estarão acessíveis. `active (running)` não comprova a conexão: teste o SOCKS e uma rota corporativa permitida.
 

@@ -6,7 +6,7 @@ keys:
   - &standalone age1z5tm0nfucw03y3n0n8xzgdjjnck8ue6zahcsm4uyyfwwznyjk3mq45thtl
 
 creation_rules:
-  - path_regex: secrets/sing-box-(config|hosts)\.enc$
+  - path_regex: secrets/sing-box-(domains-proxy|hosts)\.enc$
     key_groups:
       - age:
           - *user

@@ -1,0 +1,143 @@
+{
+  "log": {
+    "level": "info"
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "hosts",
+        "tag": "breakglass",
+        "path": [
+          "/etc/sing-box/hosts.mgmt"
+        ]
+      },
+      {
+        "type": "udp",
+        "tag": "lab-dns",
+        "server": "10.40.1.101"
+      },
+      {
+        "type": "tls",
+        "tag": "public-dns",
+        "server": "1.1.1.1",
+        "server_port": 853,
+        "tls": {
+          "enabled": true,
+          "server_name": "cloudflare-dns.com"
+        }
+      },
+      {
+        "type": "fakeip",
+        "tag": "fake-dns",
+        "inet4_range": "198.18.0.0/15"
+      }
+    ],
+    "rules": [
+      {
+        "domain": "home.arpa",
+        "query_type": "A",
+        "action": "predefined",
+        "answer": [
+          "home.arpa. 60 IN A 10.40.0.35"
+        ]
+      },
+      {
+        "query_type": "A",
+        "action": "predefined",
+        "answer": [
+          "*.home.arpa. 60 IN A 10.40.0.35"
+        ],
+        "domain_suffix": "home.arpa"
+      },
+      {
+        "action": "predefined",
+        "domain_suffix": "home.arpa"
+      },
+      {
+        "query_type": [
+          "HTTPS",
+          "SVCB"
+        ],
+        "action": "reject"
+      },
+      {
+        "server": "breakglass",
+        "domain_suffix": ".mgmt.the-lab.zone"
+      },
+      {
+        "server": "lab-dns",
+        "domain_suffix": ".home.the-lab.zone"
+      },
+      {
+        "server": "fake-dns",
+        "rule_set": "proxy-domains"
+      }
+    ],
+    "final": "public-dns",
+    "strategy": "ipv4_only"
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "192.0.2.1/30"
+      ],
+      "auto_route": true,
+      "auto_redirect": true,
+      "strict_route": false,
+      "stack": "gvisor",
+      "auto_redirect_input_mark": "0x1023",
+      "auto_redirect_output_mark": "0x1024",
+      "auto_redirect_reset_mark": "0x1025"
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "socks",
+      "tag": "corp-socks",
+      "server": "127.0.0.1",
+      "server_port": 1080,
+      "version": "5",
+      "bind_interface": "lo"
+    }
+  ],
+  "route": {
+    "auto_detect_interface": true,
+    "default_domain_resolver": {
+      "server": "public-dns"
+    },
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "outbound": "corp-socks",
+        "rule_set": "proxy-domains"
+      }
+    ],
+    "final": "direct",
+    "rule_set": [
+      {
+        "type": "local",
+        "tag": "proxy-domains",
+        "format": "source",
+        "path": "/run/secrets/sing-box-domains-proxy"
+      }
+    ]
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    }
+  }
+}
