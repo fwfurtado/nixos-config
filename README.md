@@ -115,7 +115,7 @@ No WD, o estado Noctalia anterior foi preservado em `~/.local/state/noctalia/set
 
 O Home Manager instala Google Chrome (atalho `Mod+Shift+Return`), Zed, Slack e Obsidian; GitHub CLI, fzf, fd, mergiraf e ec já estavam declarados. Os módulos do host ativam o aplicativo e o CLI do 1Password. Beekeeper Studio não foi incluído: o pacote `beekeeper-studio-6.1.4` deste pin foi marcado pelo nixpkgs como inseguro devido ao Electron 39.8.10 fora de suporte, e o proprietário escolheu aguardar uma versão corrigida.
 
-No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
+No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make`, `kubectl`, `sops`, `tcpdump` e `dig` (de `bind.dnsutils`). O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
 
 ### Segredos e túnel SSH
 
@@ -211,7 +211,7 @@ O Home Manager instala Google Chrome (atalho `Mod+Shift+Return`), Zed, Slack e O
 
 O `databricks-cli` está no perfil do Home Manager; a licença proprietária é permitida apenas para esse pacote nos predicados do mini-PC (`hosts/minipc/software.nix`) e do perfil standalone (`home.nix`), sem habilitar globalmente `allowUnfree`.
 
-No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make` e `kubectl`. O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
+No mini-PC, `environment.systemPackages` fornece `bd` (Beads), `omp`, `docker`, `xh`, `make`, `kubectl`, `sops`, `tcpdump` e `dig` (de `bind.dnsutils`). O pacote `docker-client` inclui Docker Compose e Buildx. `virtualisation.docker.enable` inicia o daemon local, e `fwfurtado` pertence ao grupo `docker` para usar o socket sem `sudo`. Após ativar a geração, faça logout e login para atualizar os grupos da sessão; confirme com `id -nG` e `docker info`. O grupo `docker` concede privilégios equivalentes a root no host.
 
 `omp` usa a fonte e as dependências da mesma versão do nixpkgs fixado pelo Tack; o overlay antigo para 18.11.0 foi removido após o pin passar a fornecer 18.12.2.
 

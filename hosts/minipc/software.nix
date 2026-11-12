@@ -7,6 +7,9 @@
     xh
     gnumake
     kubectl
+    sops
+    tcpdump
+    bind.dnsutils
     glib.bin
     (callPackage ../../packages/tern-stencil.nix { })
   ];
