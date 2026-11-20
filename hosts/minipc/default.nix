@@ -14,6 +14,7 @@
   time.timeZone = "America/Sao_Paulo";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.nixPath = [ "nixpkgs=flake:nixpkgs" ];
 
   security.pki.certificateFiles = [ ./home-arpa-ca.crt ];
 

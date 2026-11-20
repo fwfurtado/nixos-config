@@ -13,6 +13,7 @@
     slack
     obsidian
     nautilus
+    herdr-desktop
   ];
 
   programs.neovim.extraPackages = with pkgs; [

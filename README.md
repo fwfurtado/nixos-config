@@ -49,6 +49,8 @@ No NixOS já instalado, rode `make minipc-build` no diretório do projeto; `mini
 
 `rtk` é permitido explicitamente nas listas restritas de licenças não livres de `hosts/minipc/software.nix` e `home.nix`, pois o perfil Home Manager usa o pacote tanto no mini-PC quanto no modo standalone.
 
+O aplicativo `gitbutler` em `home/fernando/packages.nix` inclui Oniguruma e SQLite para compilar com o pin atual de nixpkgs.
+
 Para verificar após ativar a geração: `systemctl status git-bare-repository sshd`, `git ls-remote ssh://git@127.0.0.1/var/lib/git/cluster.git` e `git ls-remote ssh://git@10.42.0.1/var/lib/git/cluster.git` a partir de um pod com chave autorizada. Antes do primeiro push, o repositório vazio não lista referências. Para o controlador GitOps, gere **outro** par SSH fora do repositório; acrescente apenas sua chave pública a `users.users.git.openssh.authorizedKeys.keys` com a restrição `restrict,command="git-upload-pack '/var/lib/git/cluster.git'"`. Provisione a chave privada e a chave de host SSH verificada diretamente no Flux/Argo CD, sem versioná-las. Até essa chave pública ser adicionada, somente a chave pessoal pode ler o repositório.
 
 <<<<<<< HEAD
