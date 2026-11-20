@@ -60,3 +60,7 @@ follows = { nixpkgs = "nixpkgs" }
 [inputs.system-manager]
 url = "github:numtide/system-manager"
 type = "fetch"
+
+[inputs.nix-codex]
+url = "git+https://git.thomasave.be/thomasave/nix-codex?rev=9f92df7f8f2c2b18f2b1e066a18ae023b676fb6c"
+type = "fetch"

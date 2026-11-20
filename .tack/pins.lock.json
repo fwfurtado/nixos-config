@@ -1,6 +1,7 @@
 {
   "$declared": {
     "home-manager": "github:nix-community/home-manager",
+    "nix-codex": "git+https://git.thomasave.be/thomasave/nix-codex?rev=9f92df7f8f2c2b18f2b1e066a18ae023b676fb6c",
     "nixpkgs": "github:NixOS/nixpkgs/nixos-unstable",
     "noctalia": "github:noctalia-dev/noctalia",
     "sops-nix": "github:Mic92/sops-nix",
@@ -13,6 +14,14 @@
     "rev": "82ce401aa350502897c3f2e85f384d61cd3b0b6d",
     "narHash": "sha256-rkrJwLgLSHBnXfgoSKIDa+2LLGdTqynsV3GAxOTGhUU=",
     "lastModified": 1794278858
+  },
+  "nix-codex": {
+    "type": "git",
+    "url": "https://git.thomasave.be/thomasave/nix-codex",
+    "ref": "HEAD",
+    "rev": "9f92df7f8f2c2b18f2b1e066a18ae023b676fb6c",
+    "narHash": "sha256-UaJgHJJjv7P1YtnrKkDnxAGrTlLHUr8Pb3piFQkP2uM=",
+    "lastModified": 1791277397
   },
   "nixpkgs": {
     "type": "github",

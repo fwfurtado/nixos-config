@@ -7,5 +7,6 @@
     ./fonts.nix
     ./security.nix
     ./noctalia
+    ./codex-desktop.nix
   ];
 }

@@ -1,0 +1,25 @@
+# Codex Desktop no mini-PC
+
+O pin `nix-codex` em `.tack/pins.toml` e `.tack/pins.lock.json` fixa [thomasave/nix-codex](https://git.thomasave.be/thomasave/nix-codex) no commit `9f92df7f8f2c2b18f2b1e066a18ae023b676fb6c` (hash NAR `sha256-UaJgHJJjv7P1YtnrKkDnxAGrTlLHUr8Pb3piFQkP2uM=`). O pacote usa a versão `26.930.61225` do `.deb` oficial de Linux e o hash de origem declarado no `sources.json` do upstream. O Tack obtém a árvore como `fetch`; `overlays/codex-desktop.nix` importa `package.nix` diretamente, sem avaliar outro flake ou outro nixpkgs. `modules/desktop/codex-desktop.nix` aplica o overlay ao NixOS; `home.nix` aplica o mesmo overlay ao Home Manager standalone. `useGlobalPkgs = true` faz o Home Manager integrado compartilhar os pacotes do sistema.
+
+`home/fernando/desktop/codex-desktop.nix` instala `pkgs.chatgpt` no perfil gráfico Linux standalone e no desktop do usuário `fwfurtado` no NixOS real, não na VM de usuário `fernando`. O pacote upstream usa `--password-store=gnome-libsecret` por padrão. O wrapper local define `NIXOS_OZONE_WL=1` **somente** para `chatgpt`: o wrapper upstream seleciona `--ozone-platform=wayland` e IME quando `WAYLAND_DISPLAY` está definido. Niri, Noctalia, portais e outras aplicações Electron mantêm suas configurações. Não há `--no-sandbox`. O [guia oficial Linux](https://learn.chatgpt.com/docs/linux/linux-app#wayland-support) classifica Wayland nativo como experimental e cita possíveis falhas em janelas flutuantes, foco e atalhos; NixOS não consta das distribuições oficialmente suportadas.
+
+No NixOS, o módulo Niri do nixpkgs já ativa GNOME Keyring, Secret Service em D-Bus e o portal de segredos. A sessão atual pode confirmar o provedor com `busctl --user status org.freedesktop.secrets`. Entre na aplicação com a conta ChatGPT e desbloqueie/crie o chaveiro quando solicitado. O backend configurado guarda tokens no chaveiro do usuário, não no Git; confirme que o serviço está acessível e desbloqueado, pois o Chromium pode recorrer a armazenamento inseguro se o chaveiro não estiver disponível. O desbloqueio automático depende da sessão PAM do greeter; não foi adicionada regra PAM ao Noctalia Greeter. Em Linux standalone, confirme que a distribuição fornece um Secret Service funcional antes da autenticação; não instale um segundo provedor por cima de um existente. No mini-PC, `hosts/minipc/software.nix` já habilitava `programs.nix-ld`: ele continua sem bibliotecas adicionais. Segundo o [README do upstream](https://git.thomasave.be/thomasave/nix-codex/src/commit/9f92df7f8f2c2b18f2b1e066a18ae023b676fb6c/README.md), um runtime baixado no primeiro uso pode exigir `nix-ld`.
+
+## Instalação e verificação
+
+```bash
+make minipc-build
+make home-build
+make home-build-desktop
+```
+
+Os comandos constroem as gerações; **não as ativam**. Para usar a nova geração no mini-PC, depois de aprovar a ativação, siga o procedimento de registro e `switch-to-configuration switch` já descrito no README. Abra **ChatGPT** no lançador do Niri/Noctalia ou execute `chatgpt` na sessão gráfica. A autenticação interativa deve ser feita pelo usuário. O executável construído foi aberto na sessão gráfica sem ativar o sistema; o aplicativo inicializou o app-server e baixou/validou seu runtime na primeira execução, mas não houve login nem verificação visual da tela. Se surgir erro de loader após o primeiro download do runtime, registre a biblioteca ausente antes de considerar mudar `programs.nix-ld.libraries`.
+
+## Atualização
+
+Verifique o [README](https://git.thomasave.be/thomasave/nix-codex/src/branch/master/README.md), `package.nix`, `sources.json` e `update.sh` da nova revisão. Mude **apenas** o `rev` da URL de `nix-codex` em `.tack/pins.toml`, rode `tack update nix-codex --accept` e repita os três builds. O upstream usa `update.sh` para atualizar `sources.json` com as versões e hashes publicados no repositório apt da OpenAI; atualizar somente o nosso lock não atualiza o `.deb` quando o upstream ainda não publicou revisão nova.
+
+## Codex Remote
+
+A [documentação oficial de Remote Connections](https://learn.chatgpt.com/docs/remote-connections#before-you-set-up-remote) limita os **hosts controlados pelo telefone** a macOS e Windows, sujeitos a liberação da função e à conta. Ela descreve emparelhamento por QR, sincronização de conversas, aprovação remota e controle de sessões nesses hosts, não no Linux. A [documentação mobile](https://learn.chatgpt.com/docs/mobile) confirma o mesmo limite. Portanto, **não há suporte oficial documentado para controlar este host Linux pela aplicação ChatGPT no telefone**; a interface/funcionalidade da versão pinada não foi verificada após login. A conexão a um host Linux por SSH a partir de um desktop Mac/Windows é outro fluxo e não transforma o Linux em host Remote móvel. Nenhuma ponte, serviço público, patch de autenticação ou contorno de TLS foi incluído.

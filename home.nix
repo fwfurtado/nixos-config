@@ -5,8 +5,9 @@ let
 
   pkgs = import inputs.nixpkgs {
     inherit system;
+    overlays = [ (import ./overlays/codex-desktop.nix { inherit inputs; }) ];
     config.allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) [ "databricks-cli" "google-chrome" "slack" "obsidian" "rtk" "v4l-utils" "gitbutler" ];
+      builtins.elem (lib.getName pkg) [ "databricks-cli" "google-chrome" "slack" "obsidian" "rtk" "v4l-utils" "gitbutler" "chatgpt" ];
   };
 
   homePlatform =
