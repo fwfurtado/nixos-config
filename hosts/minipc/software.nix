@@ -14,6 +14,9 @@
     (callPackage ../../packages/tern-stencil.nix { })
   ];
 
+  # uv installs Python wheels outside Nix; native extensions need libstdc++ at runtime.
+  environment.sessionVariables.LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+
   # Keep the original package on PATH so its fish completion stays available.
   home-manager.users.fwfurtado.programs.fish.functions.omp = {
     description = "Run OMP with the NixOS CA bundle";

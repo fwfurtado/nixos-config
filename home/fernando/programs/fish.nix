@@ -4,7 +4,10 @@
     enable = true;
     preferAbbrs = true;
     generateCompletions = true;
-    shellInit = lib.optionalString (homePlatform == "darwin") ''
+    shellInit = ''
+      # Applications may replace PATH while retaining Home Manager's session-vars guard.
+      fish_add_path -g "$HOME/.local/bin"
+    '' + lib.optionalString (homePlatform == "darwin") ''
       set -gx MANPATH /opt/homebrew/share/man $MANPATH
       set -gx INFOPATH /opt/homebrew/share/info $INFOPATH
     '';
