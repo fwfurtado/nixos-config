@@ -14,9 +14,6 @@
     dbeaver-bin
     databricks-cli
     krew
-    (gitbutler.overrideAttrs (old: {
-      buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.oniguruma pkgs.sqlite ];
-    }))
     teleport
   ] ++ lib.optionals (homePlatform == "linux" && homeDesktop) [
     pkgs.tuios
