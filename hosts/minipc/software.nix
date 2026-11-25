@@ -10,6 +10,7 @@
     sops
     tcpdump
     bind.dnsutils
+    bubblewrap
     glib.bin
     (callPackage ../../packages/tern-stencil.nix { })
   ];
