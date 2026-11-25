@@ -7,6 +7,8 @@
     xh
     gnumake
     kubectl
+    talosctl
+    opentofu
     sops
     tcpdump
     bind.dnsutils
