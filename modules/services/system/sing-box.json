@@ -68,7 +68,9 @@
         "server": "lab-dns",
         "domain_suffix": [
             ".home.the-lab.zone",
-            ".pve.the-lab.zone"
+            ".pve.the-lab.zone",
+            ".management.the-lab.zone",
+            ".prod.the-lab.zone"
         ]
       },
       {
